@@ -1,0 +1,84 @@
+import { FiMail, FiInstagram, FiLinkedin, FiGithub, FiDownload } from "react-icons/fi";
+import { FaStrava } from "react-icons/fa";
+import gabriele from "../assets/gabriele.png";
+
+const Home = () => (
+  <div id="home" className="p-12">
+    <div className="flex items-center justify-center h-full">
+      <div className="flex items-center gap-12">
+        <div className="w-80 h-80">
+          <img
+            src={gabriele}
+            alt="Gabriele Angeletti"
+            className="rounded-full object-cover w-full h-full shadow-lg"
+            style={{ clipPath: "url(#blob)" }}
+          />
+          <svg width="0" height="0">
+            <defs>
+              <clipPath id="blob" clipPathUnits="objectBoundingBox">
+                <path d="M0.83,0.618 C0.828,0.738,0.703,0.834,0.582,0.865 C0.461,0.896,0.334,0.86,0.245,0.778 C0.155,0.696,0.11,0.573,0.138,0.458 C0.166,0.344,0.264,0.245,0.378,0.2 C0.492,0.156,0.615,0.168,0.71,0.24 C0.805,0.312,0.832,0.498,0.83,0.618 Z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-4xl font-black text-base-content">GABRIELE ANGELETTI</h1>
+          <p className="text-2xl mt-2 text-base-content/70">
+            Software Engineer<span className="animate-ping">|</span>
+          </p>
+          <p className="mt-4 max-w-md text-base-content/60">
+            Creative Software Engineer based in London and happy to travel all over Europe to build
+            great things.
+          </p>
+          <div className="flex gap-4 mt-6">
+            <a
+              href="https://github.com/gabrieleangeletti"
+              className="text-base-content/60 hover:text-base-content transition-colors duration-200"
+            >
+              <FiGithub size={20} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/gabriele-angeletti/"
+              className="text-base-content/60 hover:text-base-content transition-colors duration-200"
+            >
+              <FiLinkedin size={20} />
+            </a>
+            <a
+              href="https://www.instagram.com/gabs.ang/"
+              className="text-base-content/60 hover:text-base-content transition-colors duration-200"
+            >
+              <FiInstagram size={20} />
+            </a>
+            <a
+              href="https://www.strava.com/athletes/27166292"
+              className="text-base-content/60 hover:text-base-content transition-colors duration-200"
+            >
+              <FaStrava size={20} />
+            </a>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 mt-8">
+            <a
+              href="https://github.com/gabrieleangeletti/resume/raw/master/resume.pdf"
+              download="Gabriele_Angeletti_CV.pdf"
+              className="btn btn-primary flex items-center gap-2 px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              <FiDownload size={18} />
+              Download CV
+            </a>
+            <a
+              href="#contact"
+              className="btn btn-outline flex items-center gap-2 px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              <FiMail size={18} />
+              Contact
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default Home;
