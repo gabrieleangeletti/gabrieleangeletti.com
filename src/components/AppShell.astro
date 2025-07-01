@@ -1,0 +1,15 @@
+---
+import Sidebar from "./Sidebar.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<div class="bg-base-100 min-h-screen font-montserrat">
+  <Sidebar />
+  <div class="absolute top-6 right-6">
+    <ThemeToggle />
+  </div>
+  <main class="ml-48">
+    <slot />
+  </main>
+</div>
+

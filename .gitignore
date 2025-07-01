@@ -74,3 +74,6 @@ cypress/screenshots/
 # Cloudflare
 .wrangler
 .dev.vars*
+
+# Astro
+.astro

@@ -6,10 +6,36 @@ import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 import pluginImport from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
+import pluginAstro from "eslint-plugin-astro";
 
 export default [
   {
-    ignores: ["dist", "eslint.config.js", "tailwind.config.js", "vite.config.ts"],
+    ignores: [
+      "dist",
+      ".astro",
+      "eslint.config.js",
+      "tailwind.config.js",
+      "vite.config.ts",
+      "astro.config.mjs",
+    ],
+  },
+  ...pluginAstro.configs.recommended,
+  {
+    files: ["**/*.astro"],
+    languageOptions: {
+      parser: pluginAstro.parser,
+      parserOptions: {
+        extraFileExtensions: [".astro"],
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+    },
+    rules: {
+      ...pluginAstro.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+    },
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],

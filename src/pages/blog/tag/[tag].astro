@@ -1,0 +1,143 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import AppShell from "../../../components/AppShell.astro";
+import { loadBlogPosts } from "../../../data/blog";
+
+export async function getStaticPaths() {
+  const allPosts = loadBlogPosts();
+  const publishedPosts = allPosts.filter((post) => post.status === "published");
+
+  // Get all unique tags from published posts
+  const allTags = new Set<string>();
+  publishedPosts.forEach((post) => {
+    post.tags.forEach((tag) => allTags.add(tag));
+  });
+
+  return Array.from(allTags).map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Load all published posts and filter by tag
+const allPosts = loadBlogPosts();
+const publishedPosts = allPosts
+  .filter((post) => post.status === "published")
+  .filter((post) => post.tags.includes(tag))
+  .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+
+// Utility function to generate consistent colors for tags
+const getTagColor = (tagName: string): string => {
+  const colors = [
+    "badge-primary",
+    "badge-secondary",
+    "badge-accent",
+    "badge-info",
+    "badge-success",
+    "badge-warning",
+    "badge-error",
+  ];
+
+  // Simple hash function to consistently map tags to colors
+  let hash = 0;
+  for (let i = 0; i < tagName.length; i++) {
+    hash = ((hash << 5) - hash + tagName.charCodeAt(i)) & 0xffffffff;
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
+
+const formatDate = (date: Date): string => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+---
+
+<Layout
+  title={`Posts tagged "${tag}" - Blog - Gabriele Angeletti`}
+  description={`Read all blog posts tagged with "${tag}". Thoughts on software engineering, technology, and building great products.`}
+>
+  <AppShell>
+    <div id="blog" class="p-12">
+      <div class="max-w-4xl mx-auto">
+        <!-- Back button -->
+        <div class="mb-8">
+          <a href="/blog" class="btn btn-ghost btn-sm"> ← Back to Blog </a>
+        </div>
+
+        <h1 class="text-4xl font-bold text-base-content mb-2">
+          Posts tagged "
+          <span class={`badge ${getTagColor(tag)} badge-lg`}>{tag}</span>
+          "
+        </h1>
+        <p class="text-base-content/60 mb-12">
+          {publishedPosts.length} post{publishedPosts.length !== 1 ? "s" : ""} found
+        </p>
+
+        <div class="space-y-8">
+          {
+            publishedPosts.map((post) => (
+              <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="card-body">
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {post.tags.map((postTag) => (
+                      <a
+                        href={`/blog/tag/${postTag}`}
+                        class={`badge ${getTagColor(postTag)} badge-sm hover:scale-105 transition-transform cursor-pointer ${
+                          postTag === tag ? "ring-2 ring-primary" : ""
+                        }`}
+                      >
+                        {postTag}
+                      </a>
+                    ))}
+                  </div>
+
+                  <a href={`/blog/${post.slug}`} class="hover:text-primary transition-colors">
+                    <h2 class="card-title text-2xl font-bold text-base-content mb-3">
+                      {post.title}
+                    </h2>
+                  </a>
+
+                  <div class="flex items-center gap-2 text-sm text-base-content/60 mb-4">
+                    {post.author && (
+                      <>
+                        <span>By {post.author}</span>
+                        <span>•</span>
+                      </>
+                    )}
+                    <span>{formatDate(post.timestamp)}</span>
+                  </div>
+
+                  <p class="text-base-content/80 leading-relaxed mb-4">
+                    {post.excerpt || post.content.substring(0, 200) + "..."}
+                  </p>
+
+                  <div class="card-actions justify-end">
+                    <a href={`/blog/${post.slug}`} class="btn btn-primary btn-sm">
+                      Read More
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        {
+          publishedPosts.length === 0 && (
+            <div class="text-center py-12">
+              <p class="text-base-content/60 text-lg">No posts found with this tag.</p>
+              <a href="/blog" class="btn btn-primary mt-4">
+                View All Posts
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </AppShell>
+</Layout>
