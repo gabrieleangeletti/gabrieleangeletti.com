@@ -1,4 +1,7 @@
 {
   "name": "gabrieleangeletti",
-  "compatibility_date": "2025-07-01"
+  "compatibility_date": "2025-07-01",
+  "observability": {
+    "enabled": true
+  }
 }
