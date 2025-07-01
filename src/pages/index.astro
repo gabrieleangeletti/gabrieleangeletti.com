@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import AppShell from "../components/AppShell.astro";
 import { FiMail, FiInstagram, FiLinkedin, FiGithub, FiDownload } from "react-icons/fi";
 import { FaStrava } from "react-icons/fa";
+import gabrieleImage from "../assets/gabriele.png";
 ---
 
 <Layout title="Gabriele Angeletti - Software Engineer">
@@ -12,7 +13,7 @@ import { FaStrava } from "react-icons/fa";
         <div class="flex items-center gap-12">
           <div class="w-80 h-80">
             <img
-              src="/src/assets/gabriele.png"
+              src={gabrieleImage}
               alt="Gabriele Angeletti"
               class="rounded-full object-cover w-full h-full shadow-lg"
               style="clip-path: url(#blob)"
