@@ -29,23 +29,23 @@ function App() {
   }, []);
 
   // Handle blog post routes
-  const getBlogPostId = (hash: string): string | null => {
-    const match = hash.match(/^#blog-post-(.+)$/);
+  const getBlogPostSlug = (hash: string): string | null => {
+    const match = hash.match(/^#!blog-post-(.+)$/);
     return match ? match[1] : null;
   };
 
   // Handle blog tag routes
   const getBlogTag = (hash: string): string | null => {
-    const match = hash.match(/^#blog-tag-(.+)$/);
+    const match = hash.match(/^#!blog-tag-(.+)$/);
     return match ? match[1] : null;
   };
 
   const renderPage = () => {
-    const blogPostId = getBlogPostId(page);
+    const blogPostSlug = getBlogPostSlug(page);
     const blogTag = getBlogTag(page);
 
-    if (blogPostId) {
-      return <BlogPost key={`post-${blogPostId}`} postId={blogPostId} />;
+    if (blogPostSlug) {
+      return <BlogPost key={`post-${blogPostSlug}`} postSlug={blogPostSlug} />;
     }
 
     if (blogTag) {

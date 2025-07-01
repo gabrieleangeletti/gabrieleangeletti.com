@@ -1,6 +1,7 @@
 // Post type definition
 export type Post = {
   id: string;
+  slug: string;
   title: string;
   content: string;
   timestamp: Date;
@@ -30,42 +31,23 @@ const getTagColor = (tag: string): string => {
   return colors[Math.abs(hash) % colors.length];
 };
 
-// Hardcoded sample posts for testing
-const samplePosts: Post[] = [
-  {
-    id: "1",
-    title: "The Art of Clean Code: Writing Software That Lasts",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.\n\nNemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.",
-    timestamp: new Date("2024-01-15"),
-    status: "published",
-    tags: ["software-engineering", "best-practices", "clean-code"],
-    author: "Gabriele Angeletti",
-    excerpt:
-      "Exploring the principles and practices that make code maintainable, readable, and scalable for long-term success.",
-  },
-  {
-    id: "2",
-    title: "Building Scalable Web Applications: A Modern Approach",
-    content:
-      "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.\n\nAt vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.\n\nEt harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.",
-    timestamp: new Date("2024-01-08"),
-    status: "published",
-    tags: ["web-development", "architecture", "scalability", "react"],
-    author: "Gabriele Angeletti",
-    excerpt:
-      "Modern techniques and architectural patterns for building web applications that can grow with your business needs.",
-  },
-];
+// Import blog data loading functions
+import { loadBlogPosts, getPostBySlug } from "../data/blog";
 
 // BlogPost component for displaying a single post
 interface BlogPostProps {
-  postId?: string;
+  postSlug: string;
   posts?: Post[];
 }
 
-export const BlogPost = ({ postId, posts = samplePosts }: BlogPostProps) => {
-  const post = posts.find((p) => p.id === postId);
+export const BlogPost = ({ postSlug, posts }: BlogPostProps) => {
+  let post: Post | undefined;
+
+  if (posts) {
+    post = posts.find((p) => p.slug === postSlug);
+  } else {
+    post = postSlug ? getPostBySlug(postSlug) : undefined;
+  }
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -107,7 +89,7 @@ export const BlogPost = ({ postId, posts = samplePosts }: BlogPostProps) => {
             {post.tags.map((tag) => (
               <a
                 key={tag}
-                href={`#blog-tag-${tag}`}
+                href={`#!blog-tag-${tag}`}
                 className={`badge ${getTagColor(tag)} hover:scale-105 transition-transform cursor-pointer`}
               >
                 {tag}
@@ -147,7 +129,7 @@ export const BlogPost = ({ postId, posts = samplePosts }: BlogPostProps) => {
               {post.tags.map((tag) => (
                 <a
                   key={tag}
-                  href={`#blog-tag-${tag}`}
+                  href={`#!blog-tag-${tag}`}
                   className={`badge ${getTagColor(tag)} badge-sm hover:scale-105 transition-transform cursor-pointer`}
                 >
                   {tag}
@@ -169,9 +151,11 @@ interface BlogProps {
   filterTag?: string;
 }
 
-const Blog = ({ posts = samplePosts, filterTag }: BlogProps) => {
+const Blog = ({ posts, filterTag }: BlogProps) => {
+  // Load posts from JSON files if not provided
+  const allPosts = posts || loadBlogPosts();
   // Filter only published posts and sort by timestamp (newest first)
-  let publishedPosts = posts
+  let publishedPosts = allPosts
     .filter((post) => post.status === "published")
     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
@@ -228,7 +212,7 @@ const Blog = ({ posts = samplePosts, filterTag }: BlogProps) => {
                   {post.tags.map((tag) => (
                     <a
                       key={tag}
-                      href={`#blog-tag-${tag}`}
+                      href={`#!blog-tag-${tag}`}
                       className={`badge ${getTagColor(tag)} badge-sm hover:scale-105 transition-transform cursor-pointer`}
                     >
                       {tag}
@@ -236,7 +220,10 @@ const Blog = ({ posts = samplePosts, filterTag }: BlogProps) => {
                   ))}
                 </div>
 
-                <a href={`#blog-post-${post.id}`} className="hover:text-primary transition-colors">
+                <a
+                  href={`#!blog-post-${post.slug}`}
+                  className="hover:text-primary transition-colors"
+                >
                   <h2 className="card-title text-2xl font-bold text-base-content mb-3">
                     {post.title}
                   </h2>
@@ -257,7 +244,7 @@ const Blog = ({ posts = samplePosts, filterTag }: BlogProps) => {
                 </p>
 
                 <div className="card-actions justify-end">
-                  <a href={`#blog-post-${post.id}`} className="btn btn-primary btn-sm">
+                  <a href={`#!blog-post-${post.slug}`} className="btn btn-primary btn-sm">
                     Read More
                   </a>
                 </div>
