@@ -70,3 +70,7 @@ cypress/screenshots/
 # editor
 .vscode
 .idea
+
+# Cloudflare
+.wrangler
+.dev.vars*
