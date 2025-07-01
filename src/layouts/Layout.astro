@@ -1,6 +1,5 @@
 ---
 import "../../src/styles/global.css";
-import gabrieleImage from "../assets/gabriele.png";
 
 export interface Props {
   title?: string;
@@ -11,7 +10,7 @@ export interface Props {
 const {
   title = "Gabriele Angeletti",
   description = "Software engineer passionate about building scalable web applications and clean code.",
-  ogImage = gabrieleImage,
+  ogImage = "https://gabrieleangeletti.com/assets/gabriele.png",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
