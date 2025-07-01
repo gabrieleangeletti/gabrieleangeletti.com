@@ -4,7 +4,7 @@ import gabriele from "../assets/gabriele.png";
 
 const Home = () => (
   <div id="home" className="p-12">
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center py-48">
       <div className="flex items-center gap-12">
         <div className="w-80 h-80">
           <img
@@ -27,8 +27,13 @@ const Home = () => (
             Software Engineer<span className="animate-ping">|</span>
           </p>
           <p className="mt-4 max-w-md text-base-content/60">
-            Creative Software Engineer based in London and happy to travel all over Europe to build
-            great things.
+            Gabriele here. I build software that bridges between ambitious visions and tangible
+            reality. My passion is crafting robust, intelligent software that doesn&apos;t just
+            work, but truly moves the needle for your business.
+          </p>
+          <p className="mt-4 max-w-md text-base-content/60">
+            Ready to see your most ambitious project take solid form? Let&apos;s connect and build
+            something exceptional together.
           </p>
           <div className="flex gap-4 mt-6">
             <a

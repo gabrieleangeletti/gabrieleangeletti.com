@@ -3,18 +3,14 @@ import type { JSX } from "react";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Service from "./pages/Service";
-import Portfolio from "./pages/Portfolio";
-import News from "./pages/News";
+import Blog, { BlogPost } from "./pages/Blog";
 import Contact from "./pages/Contact";
 import ThemeToggle from "./components/ThemeToggle";
 
 const routes: { [key: string]: () => JSX.Element } = {
   "#home": Home,
   "#about": About,
-  "#service": Service,
-  "#portfolio": Portfolio,
-  "#news": News,
+  "#blog": () => <Blog />,
   "#contact": Contact,
 };
 
@@ -32,17 +28,41 @@ function App() {
     };
   }, []);
 
-  const Page = routes[page] || Home;
+  // Handle blog post routes
+  const getBlogPostId = (hash: string): string | null => {
+    const match = hash.match(/^#blog-post-(.+)$/);
+    return match ? match[1] : null;
+  };
+
+  // Handle blog tag routes
+  const getBlogTag = (hash: string): string | null => {
+    const match = hash.match(/^#blog-tag-(.+)$/);
+    return match ? match[1] : null;
+  };
+
+  const renderPage = () => {
+    const blogPostId = getBlogPostId(page);
+    const blogTag = getBlogTag(page);
+
+    if (blogPostId) {
+      return <BlogPost key={`post-${blogPostId}`} postId={blogPostId} />;
+    }
+
+    if (blogTag) {
+      return <Blog key={`tag-${blogTag}`} filterTag={blogTag} />;
+    }
+
+    const PageComponent = routes[page] || Home;
+    return <PageComponent key={page} />;
+  };
 
   return (
-    <div className="bg-base-100 min-h-screen font-sans">
+    <div className="bg-base-100 min-h-screen font-montserrat">
       <Sidebar />
       <div className="absolute top-6 right-6">
         <ThemeToggle />
       </div>
-      <main className="ml-48">
-        <Page />
-      </main>
+      <main className="ml-48">{renderPage()}</main>
     </div>
   );
 }

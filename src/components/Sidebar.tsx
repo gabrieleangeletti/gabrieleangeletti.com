@@ -1,9 +1,9 @@
-import { FiHome, FiUser, FiSettings, FiBriefcase, FiFileText, FiMail } from "react-icons/fi";
+import { FiHome, FiUser, FiFileText, FiMail } from "react-icons/fi";
 
 const Sidebar = () => (
   <aside className="fixed top-0 left-0 h-full w-48 bg-base-200 shadow-lg flex flex-col justify-between p-6">
     <div>
-      <h1 className="text-2xl font-bold tracking-widest text-base-content">TOKYO</h1>
+      <h1 className="text-2xl font-bold tracking-widest text-base-content">GABRIELE ANGELETTI</h1>
       <nav className="mt-12">
         <ul>
           <li className="mb-6">
@@ -24,26 +24,10 @@ const Sidebar = () => (
           </li>
           <li className="mb-6">
             <a
-              href="#service"
+              href="#blog"
               className="flex items-center text-base-content/70 hover:text-base-content"
             >
-              <FiSettings className="mr-3" /> Service
-            </a>
-          </li>
-          <li className="mb-6">
-            <a
-              href="#portfolio"
-              className="flex items-center text-base-content/70 hover:text-base-content"
-            >
-              <FiBriefcase className="mr-3" /> Portfolio
-            </a>
-          </li>
-          <li className="mb-6">
-            <a
-              href="#news"
-              className="flex items-center text-base-content/70 hover:text-base-content"
-            >
-              <FiFileText className="mr-3" /> News
+              <FiFileText className="mr-3" /> Blog
             </a>
           </li>
           <li>
