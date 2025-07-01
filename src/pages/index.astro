@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AppShell from "../components/AppShell.astro";
+import { Image } from "astro:assets";
 import { FiMail, FiInstagram, FiLinkedin, FiGithub, FiDownload } from "react-icons/fi";
 import { FaStrava } from "react-icons/fa";
 import gabrieleImage from "../assets/gabriele.png";
@@ -12,11 +13,13 @@ import gabrieleImage from "../assets/gabriele.png";
       <div class="flex items-center justify-center py-48">
         <div class="flex items-center gap-12">
           <div class="w-80 h-80">
-            <img
+            <Image
               src={gabrieleImage}
               alt="Gabriele Angeletti"
               class="rounded-full object-cover w-full h-full shadow-lg"
               style="clip-path: url(#blob)"
+              width={600}
+              height={600}
             />
             <svg width="0" height="0">
               <defs>
