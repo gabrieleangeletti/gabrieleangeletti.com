@@ -2,6 +2,7 @@
 import Layout from "../../../layouts/Layout.astro";
 import AppShell from "../../../components/AppShell.astro";
 import { getCollection } from "astro:content";
+import { getTagColor } from "../util";
 
 export async function getStaticPaths() {
   const allEntries = await getCollection("blog");
@@ -27,26 +28,6 @@ const publishedPosts = allEntries
   .filter((entry) => entry.data.status === "published")
   .filter((entry) => entry.data.tags.includes(tag))
   .sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime());
-
-// Utility function to generate consistent colors for tags
-const getTagColor = (tagName: string): string => {
-  const colors = [
-    "badge-primary",
-    "badge-secondary",
-    "badge-accent",
-    "badge-info",
-    "badge-success",
-    "badge-warning",
-    "badge-error",
-  ];
-
-  // Simple hash function to consistently map tags to colors
-  let hash = 0;
-  for (let i = 0; i < tagName.length; i++) {
-    hash = ((hash << 5) - hash + tagName.charCodeAt(i)) & 0xffffffff;
-  }
-  return colors[Math.abs(hash) % colors.length];
-};
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
@@ -96,7 +77,7 @@ const formatDate = (date: Date): string => {
                     ))}
                   </div>
 
-                  <a href={`/blog/${entry.slug}`} class="hover:text-primary transition-colors">
+                  <a href={`/blog/${entry.data.slug}`} class="hover:text-primary transition-colors">
                     <h2 class="card-title text-2xl font-bold text-base-content mb-3">
                       {entry.data.title}
                     </h2>
@@ -117,7 +98,7 @@ const formatDate = (date: Date): string => {
                   </p>
 
                   <div class="card-actions justify-end">
-                    <a href={`/blog/${entry.slug}`} class="btn btn-primary btn-sm">
+                    <a href={`/blog/${entry.data.slug}`} class="btn btn-primary btn-sm">
                       Read More
                     </a>
                   </div>

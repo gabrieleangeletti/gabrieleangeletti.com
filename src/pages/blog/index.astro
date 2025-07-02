@@ -2,32 +2,13 @@
 import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
 import { getCollection } from "astro:content";
+import { getTagColor } from "./util";
 
 // Load all published posts
 const allEntries = await getCollection("blog");
 const publishedPosts = allEntries
   .filter((entry) => entry.data.status === "published")
   .sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime());
-
-// Utility function to generate consistent colors for tags
-const getTagColor = (tag: string): string => {
-  const colors = [
-    "badge-primary",
-    "badge-secondary",
-    "badge-accent",
-    "badge-info",
-    "badge-success",
-    "badge-warning",
-    "badge-error",
-  ];
-
-  // Simple hash function to consistently map tags to colors
-  let hash = 0;
-  for (let i = 0; i < tag.length; i++) {
-    hash = ((hash << 5) - hash + tag.charCodeAt(i)) & 0xffffffff;
-  }
-  return colors[Math.abs(hash) % colors.length];
-};
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
