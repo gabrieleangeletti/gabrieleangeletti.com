@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -42,6 +42,8 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/ts-plugin": "^1.10.4",
     "@tailwindcss/vite": "^4.1.10",
     "globals": "^16.2.0",
     "react": "^19.1.0",

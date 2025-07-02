@@ -1,16 +1,16 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import AppShell from "../../../components/AppShell.astro";
-import { loadBlogPosts } from "../../../data/blog";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const allPosts = loadBlogPosts();
-  const publishedPosts = allPosts.filter((post) => post.status === "published");
+  const allEntries = await getCollection("blog");
+  const publishedPosts = allEntries.filter((entry) => entry.data.status === "published");
 
   // Get all unique tags from published posts
   const allTags = new Set<string>();
-  publishedPosts.forEach((post) => {
-    post.tags.forEach((tag) => allTags.add(tag));
+  publishedPosts.forEach((entry) => {
+    entry.data.tags.forEach((tag) => allTags.add(tag));
   });
 
   return Array.from(allTags).map((tag) => ({
@@ -22,11 +22,11 @@ export async function getStaticPaths() {
 const { tag } = Astro.props;
 
 // Load all published posts and filter by tag
-const allPosts = loadBlogPosts();
-const publishedPosts = allPosts
-  .filter((post) => post.status === "published")
-  .filter((post) => post.tags.includes(tag))
-  .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+const allEntries = await getCollection("blog");
+const publishedPosts = allEntries
+  .filter((entry) => entry.data.status === "published")
+  .filter((entry) => entry.data.tags.includes(tag))
+  .sort((a, b) => b.data.timestamp.getTime() - a.data.timestamp.getTime());
 
 // Utility function to generate consistent colors for tags
 const getTagColor = (tagName: string): string => {
@@ -80,11 +80,11 @@ const formatDate = (date: Date): string => {
 
         <div class="space-y-8">
           {
-            publishedPosts.map((post) => (
+            publishedPosts.map((entry) => (
               <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="card-body">
                   <div class="flex flex-wrap gap-2 mb-4">
-                    {post.tags.map((postTag) => (
+                    {entry.data.tags.map((postTag) => (
                       <a
                         href={`/blog/tag/${postTag}`}
                         class={`badge ${getTagColor(postTag)} badge-sm hover:scale-105 transition-transform cursor-pointer ${
@@ -96,28 +96,28 @@ const formatDate = (date: Date): string => {
                     ))}
                   </div>
 
-                  <a href={`/blog/${post.slug}`} class="hover:text-primary transition-colors">
+                  <a href={`/blog/${entry.slug}`} class="hover:text-primary transition-colors">
                     <h2 class="card-title text-2xl font-bold text-base-content mb-3">
-                      {post.title}
+                      {entry.data.title}
                     </h2>
                   </a>
 
                   <div class="flex items-center gap-2 text-sm text-base-content/60 mb-4">
-                    {post.author && (
+                    {entry.data.author && (
                       <>
-                        <span>By {post.author}</span>
+                        <span>By {entry.data.author}</span>
                         <span>•</span>
                       </>
                     )}
-                    <span>{formatDate(post.timestamp)}</span>
+                    <span>{formatDate(entry.data.timestamp)}</span>
                   </div>
 
                   <p class="text-base-content/80 leading-relaxed mb-4">
-                    {post.excerpt || post.content.substring(0, 200) + "..."}
+                    {entry.data.excerpt || entry.data.title}
                   </p>
 
                   <div class="card-actions justify-end">
-                    <a href={`/blog/${post.slug}`} class="btn btn-primary btn-sm">
+                    <a href={`/blog/${entry.slug}`} class="btn btn-primary btn-sm">
                       Read More
                     </a>
                   </div>

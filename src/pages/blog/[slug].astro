@@ -1,19 +1,24 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
-import { loadBlogPosts } from "../../data/blog";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = loadBlogPosts();
-  const publishedPosts = posts.filter((post) => post.status === "published");
+  const blogEntries = await getCollection("blog");
+  const publishedPosts = blogEntries.filter((entry) => entry.data.status === "published");
 
-  return publishedPosts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
+  return publishedPosts.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
   }));
 }
 
-const { post } = Astro.props;
+type Props = {
+  entry: CollectionEntry<"blog">;
+};
+
+const { entry }: Props = Astro.props;
+const { Content } = await render(entry);
 
 // Utility function to generate consistent colors for tags
 const getTagColor = (tag: string): string => {
@@ -45,8 +50,8 @@ const formatDate = (date: Date): string => {
 ---
 
 <Layout
-  title={`${post.title} - Gabriele Angeletti`}
-  description={post.excerpt || post.content.substring(0, 160)}
+  title={`${entry.data.title} - Gabriele Angeletti`}
+  description={entry.data.excerpt || entry.data.title}
 >
   <AppShell>
     <div id="blog-post" class="p-12">
@@ -60,7 +65,7 @@ const formatDate = (date: Date): string => {
         <header class="mb-8">
           <div class="flex flex-wrap gap-2 mb-6">
             {
-              post.tags.map((tag) => (
+              entry.data.tags.map((tag) => (
                 <a
                   href={`/blog/tag/${tag}`}
                   class={`badge ${getTagColor(tag)} hover:scale-105 transition-transform cursor-pointer`}
@@ -71,25 +76,27 @@ const formatDate = (date: Date): string => {
             }
           </div>
 
-          <h1 class="text-5xl font-bold text-base-content mb-6 leading-tight">{post.title}</h1>
+          <h1 class="text-5xl font-bold text-base-content mb-6 leading-tight">
+            {entry.data.title}
+          </h1>
 
           <div class="flex items-center gap-4 text-base-content/60 mb-8">
             {
-              post.author && (
+              entry.data.author && (
                 <>
-                  <span class="font-medium">By {post.author}</span>
+                  <span class="font-medium">By {entry.data.author}</span>
                   <span>•</span>
                 </>
               )
             }
-            <span>{formatDate(post.timestamp)}</span>
+            <span>{formatDate(entry.data.timestamp)}</span>
           </div>
         </header>
 
         <!-- Post content -->
         <article class="prose prose-lg max-w-none">
-          <div class="text-base-content/80 leading-relaxed text-lg space-y-6">
-            {post.content.split("\n\n").map((paragraph) => <p class="mb-6">{paragraph}</p>)}
+          <div class="text-base-content/80 leading-relaxed text-lg">
+            <Content />
           </div>
         </article>
 
@@ -99,7 +106,7 @@ const formatDate = (date: Date): string => {
             <div class="flex flex-wrap gap-2">
               <span class="text-base-content/60 text-sm">Tags:</span>
               {
-                post.tags.map((tag) => (
+                entry.data.tags.map((tag) => (
                   <a
                     href={`/blog/tag/${tag}`}
                     class={`badge ${getTagColor(tag)} badge-sm hover:scale-105 transition-transform cursor-pointer`}

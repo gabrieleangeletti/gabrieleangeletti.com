@@ -1,8 +1,17 @@
 {
+  "extends": "astro/tsconfigs/strictest",
+  "include": [".astro/types.d.ts", "src"],
+  "exclude": ["dist"],
+  "references": [{ "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -16,7 +25,5 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  }
 }
