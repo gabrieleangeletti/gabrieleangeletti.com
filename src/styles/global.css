@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @plugin "daisyui" {
     themes: light --default, dark --prefersdark, cupcake;
 }
@@ -21,4 +22,3 @@
 [data-theme="cupcake"] {
   --default-font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-

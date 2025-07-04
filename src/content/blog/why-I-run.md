@@ -8,16 +8,14 @@ status: "published"
 tags: [running]
 ---
 
-I used to think running was my escape.<br>
-But it’s not.<br>
-Running is my way of life — a way to meet it head-on, one step at a time.<br><br>
+I used to think running was my escape.
+
+But it’s not. Running is my way of life — a way to meet it head-on, one step at a time.
 
 It’s always come naturally to me. I’ve never had to stop and ask, “Why do I run?”
 It’s just what you do. Period. We don’t question why we breathe, or drink water, or sleep. For me, running sits at that same table. Still, lately I’ve been wondering — why is it such an important part of my life?
-<br><br>
 
 Here's my attempt at an answer. Maybe it’ll change. But this is how I feel about it today.
-<br><br>
 
 - I run because I have to.
 - I run because it quiets the voices.
