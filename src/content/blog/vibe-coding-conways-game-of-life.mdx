@@ -1,0 +1,102 @@
+---
+title: "Vibe Coding: Conway's Game of Life"
+slug: vibe-coding-conways-game-of-life
+excerpt: A mesmerizing cellular automaton brought to life with Three.js - watch patterns emerge, evolve, and dance in 3D space.
+author: Gabriele Angeletti
+timestamp: 2025-07-17
+status: draft
+tags: [software-engineering, vibe-coding]
+---
+
+import ConwaysGameOfLife from '../../components/ConwaysGameOfLife';
+
+Being new to Astro, I wanted to get an understanding of how [Astro islands](https://docs.astro.build/en/concepts/islands/) work. I also thought it'd be a chance to test some vibe coding. Below is a vibe-coded implementation of [Conway's game of life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Here is the [code](https://github.com/gabrieleangeletti/gabrieleangeletti.com/blob/main/src/components/ConwaysGameOfLife.tsx).
+
+Here is the initial prompt (I used Claude 4 Sonnet with Thinking mode):
+
+```
+I want you to implement Conway's Game of Life.
+
+It should live inside a blog post in `src/content/blog/vibe-coding-conways-game-of-life.mdx`.
+Implement the actual logic in a React component, which is rendered inside the `.mdx` blog post.
+Please use Three.js for the implementation.
+Since this is the first time we include React components into blog posts,
+you should figure out how to accomplish this using Astro's best practices.
+
+Feel free to factor out common/utility logic somewhere else if you see fit.
+
+If you need anything from me, please interrupt what you're doing and come ask me any question.
+
+Curious to see what you build!
+```
+
+It got the game's logic at the first attempt. But all I saw on the page was a black canvas. It took four follow-up prompts to get to the bottom of the issue.
+
+For the first two follow-ups, it went in a completely wrong direction. In the third follow-up, I directed the model in the right direction, with a simple: `Should we try testing a simple React counter component to see if it's the .mdx <-> .tsx integration somehow?`.
+
+With this, it understood we were missing the `client:load` directive, effectively creating an [Astro Client Island](https://docs.astro.build/en/concepts/islands/#client-islands). By default, Astro strips out all client-side JavaScript automatically. That's why all I was seeing was a black canvas.
+
+But this was not the whole story. After another follow-up prompt specifying that I deploy my website as a statically generated site, we got to the latest problematic bit - removing the `.tsx` extension from the import statement in the `.mdx` file to enable static bundling. `import ConwaysGameOfLife from '../../components/ConwaysGameOfLife.tsx';` gets treated as a dynamic import, while `import ConwaysGameOfLife from '../../components/ConwaysGameOfLife';` kicks off module resolution, thereby including the file in the main bundle.
+
+Lesson learned: include your deployment strategy in the prompt, as that can direct the model towards one approach or another one.
+
+As for the missing `client:load` - We are adding an interactive component to an otherwise static page. This is exactly what Astro's islands are meant for. [Astro's docs](https://docs.astro.build/en/concepts/islands/#client-islands) explicitly mention:
+
+> By default, Astro will automatically render every UI component to just HTML & CSS, stripping out all client-side JavaScript automatically.
+
+I would have expected Claude to pick this up.
+
+Anyways, this was a fun experiment. I've learned more about how Astro works, and in the process learned a thing or two around prompt engineering. You can scroll down to see Claude's creation.
+
+_Everything below is AI generated_
+
+## Interactive Demo
+
+<ConwaysGameOfLife client:load />
+
+## The Magic Behind the Scenes
+
+This implementation uses Three.js to render each cell as a 3D cube. Live cells glow with a soft green light, while dead cells appear as faint gray shadows. The orthographic camera gives us a clean, top-down view that still shows the 3D depth.
+
+Here's what makes this version special:
+
+- **Real-time 3D rendering** with proper lighting and shadows
+- **Smooth animations** running at 60fps
+- **Interactive controls** - play, pause, step through generations, or reset
+- **Customizable parameters** - grid size, cell density, and animation speed
+
+## The Technical Bits
+
+The implementation combines React hooks for state management with Three.js for rendering:
+
+- `useRef` hooks manage the Three.js scene, camera, and renderer
+- `useEffect` handles the game loop and updates the visual representation
+- `useCallback` optimizes the game logic functions
+- Material switching creates the visual difference between alive and dead cells
+
+The game logic itself is straightforward - for each cell, count its neighbors and apply the rules. The tricky part is managing the React-Three.js lifecycle, ensuring proper cleanup when the component unmounts.
+
+## Why This Matters
+
+Conway's Game of Life isn't just a pretty toy (though it certainly is that). It's a powerful example of how simple rules can create complex emergent behavior. It's been used to explore concepts in:
+
+- **Artificial life** and emergence
+- **Complexity theory** and self-organization  
+- **Computer science** and cellular automata
+- **Philosophy** of computation and life itself
+
+John Conway himself called it a "zero-player game" - once you set the initial conditions, the system evolves entirely on its own. There's something profound about watching these patterns emerge from nothing but mathematical rules.
+
+## Play and Explore
+
+Try clicking the reset button a few times to see different starting patterns. Some will quickly stabilize into static structures or simple oscillators. Others might surprise you with complex, long-lived patterns that seem to have a life of their own.
+
+Watch for:
+- **Gliders** - small patterns that move across the grid
+- **Oscillators** - patterns that repeat with a fixed period
+- **Still lifes** - stable patterns that never change
+- **Chaotic regions** - areas where the pattern keeps changing
+
+The beauty is that you never know what you'll get. Each random starting configuration is like rolling cosmic dice—most patterns die out quickly, but sometimes you'll discover something wonderful.
+
+*Happy pattern watching!* 🎮✨ 
