@@ -3,7 +3,7 @@ title: How I built this website
 slug: how-I-built-this-website
 excerpt: The tech, the choices, and the approach behind this website.
 author: Gabriele Angeletti
-timestamp: 2025-07-10
+timestamp: 2025-07-27
 status: published
 tags: [software-engineering]
 ---
