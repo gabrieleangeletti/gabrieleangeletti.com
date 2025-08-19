@@ -23,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
     "@vitejs/plugin-react": "^4.5.2",
-    "astro": "^5.10.2",
+    "astro": "^5.13.2",
     "daisyui": "^5.0.43",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/mdx": "^4.3.4",
     "@astrojs/ts-plugin": "^1.10.4",
     "@tailwindcss/vite": "^4.1.10",
     "@types/three": "^0.178.0",
