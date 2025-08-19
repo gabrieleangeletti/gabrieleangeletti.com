@@ -1,13 +1,14 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://gabrieleangeletti.com",
-  integrations: [react(), mdx()],
+  integrations: [react(), mdx(), sitemap()],
   vite: {
     plugins: [
       cloudflare(),
