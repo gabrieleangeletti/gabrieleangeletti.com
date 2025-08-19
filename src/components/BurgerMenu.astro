@@ -1,0 +1,46 @@
+---
+import { FiMenu, FiX } from "react-icons/fi";
+---
+
+<button
+  id="burger-menu"
+  class="fixed top-6 left-6 z-50 p-2 bg-base-200 rounded-md shadow-lg lg:hidden"
+  aria-label="Toggle navigation menu"
+>
+  <FiMenu id="burger-icon" className="w-6 h-6 text-base-content" />
+  <FiX id="close-icon" className="w-6 h-6 text-base-content hidden" />
+</button>
+
+<script>
+  const burgerMenu = document.getElementById("burger-menu");
+  const sidebar = document.getElementById("sidebar");
+  const burgerIcon = document.getElementById("burger-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  function toggleSidebar() {
+    const isOpen = sidebar?.classList.contains("translate-x-0");
+
+    if (isOpen) {
+      sidebar?.classList.remove("translate-x-0");
+      sidebar?.classList.add("-translate-x-full");
+      burgerIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+    } else {
+      sidebar?.classList.remove("-translate-x-full");
+      sidebar?.classList.add("translate-x-0");
+      burgerIcon?.classList.add("hidden");
+      closeIcon?.classList.remove("hidden");
+    }
+  }
+
+  burgerMenu?.addEventListener("click", toggleSidebar);
+
+  const navLinks = sidebar?.querySelectorAll("a");
+  navLinks?.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    });
+  });
+</script>

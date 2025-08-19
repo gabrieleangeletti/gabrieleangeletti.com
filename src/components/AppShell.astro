@@ -1,14 +1,16 @@
 ---
 import Sidebar from "./Sidebar.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import BurgerMenu from "./BurgerMenu.astro";
 ---
 
 <div class="bg-base-100 min-h-screen font-montserrat">
   <Sidebar />
+  <BurgerMenu />
   <div class="absolute top-6 right-6">
     <ThemeToggle />
   </div>
-  <main class="ml-48">
+  <main class="lg:ml-48 ml-0 pt-20 lg:pt-0 px-6 lg:px-0">
     <slot />
   </main>
 </div>

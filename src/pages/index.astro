@@ -9,10 +9,10 @@ import gabrieleImage from "../assets/gabriele.png";
 
 <Layout title="Gabriele Angeletti - Software Engineer">
   <AppShell>
-    <div id="home" class="p-12">
-      <div class="flex items-center justify-center py-48">
-        <div class="flex items-center gap-12">
-          <div class="w-80 h-80">
+    <div id="home" class="p-4 lg:p-12">
+      <div class="flex items-center justify-center py-12 lg:py-48">
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          <div class="w-64 h-64 lg:w-80 lg:h-80 flex-shrink-0">
             <Image
               src={gabrieleImage}
               alt="Gabriele Angeletti"
@@ -31,9 +31,9 @@ import gabrieleImage from "../assets/gabriele.png";
               </defs>
             </svg>
           </div>
-          <div>
-            <h1 class="text-4xl font-black text-base-content">GABRIELE ANGELETTI</h1>
-            <p class="text-2xl mt-2 text-base-content/70">
+          <div class="text-center lg:text-left">
+            <h1 class="text-3xl lg:text-4xl font-black text-base-content">GABRIELE ANGELETTI</h1>
+            <p class="text-xl lg:text-2xl mt-2 text-base-content/70">
               Software Engineer<span class="animate-ping">|</span>
             </p>
             <p class="mt-4 max-w-md text-base-content/60">
@@ -45,7 +45,7 @@ import gabrieleImage from "../assets/gabriele.png";
               Ready to see your most ambitious project take solid form? Let's connect and build
               something exceptional together.
             </p>
-            <div class="flex gap-4 mt-6">
+            <div class="flex gap-4 mt-6 justify-center lg:justify-start">
               <a
                 href="https://github.com/gabrieleangeletti"
                 class="text-base-content/60 hover:text-base-content transition-colors duration-200"
@@ -73,7 +73,7 @@ import gabrieleImage from "../assets/gabriele.png";
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex gap-4 mt-8">
+            <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
               <a
                 href="https://github.com/gabrieleangeletti/resume/raw/master/resume.pdf"
                 download="Gabriele_Angeletti_CV.pdf"
