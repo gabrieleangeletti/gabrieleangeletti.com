@@ -6,6 +6,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "plugins": [
       {
