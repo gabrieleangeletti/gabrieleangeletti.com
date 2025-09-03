@@ -47,7 +47,7 @@ import BurgerMenu from "./BurgerMenu.astro";
     return sidebar?.classList.contains("translate-x-0");
   };
 
-  function setSidebarState(isOpen) {
+  function setSidebarState(isOpen: boolean) {
     if (isOpen) {
       openSidebar();
     } else {
