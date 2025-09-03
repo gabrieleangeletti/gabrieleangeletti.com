@@ -1,0 +1,47 @@
+[
+    {
+        "name": "GR10",
+        "description": "The GR10 is a long-distance footpath that runs from the Atlantic Ocean to the Mediterranean Sea, traversing the Pyrenees mountain range in southern France. It is one of the most popular and scenic hiking trails in Europe, known for its stunning landscapes, diverse flora and fauna, and challenging terrain. The trail covers approximately 866 kilometers (538 miles) and typically takes around 50 days to complete, depending on the hiker's pace and chosen route. The GR10 is marked by red and white blazes, making it easy for hikers to follow the path. Along the way, hikers can experience a variety of environments, from lush forests and alpine meadows to rugged mountain peaks and picturesque villages. The trail also offers opportunities for cultural experiences, as it passes through several regions with distinct traditions and cuisines.",
+        "startedAt": "2025-07-08",
+        "completedAt": "2025-08-27",
+        "location": [
+            42.536793,
+            2.433212
+        ],
+        "stages": [
+            {
+                "id": "gr10-32",
+                "title": "[GR10] [32] Py to Cabane de Bonne Aigue",
+                "polyline": "g}jbGgmjMFwAc@{CeDoHqBiDuHaIA{A_C_BeC_FyD}AqJm@eB{EBeAg@ScAp@IvCm@l@kIKoAXo@lA}@`@s@iH_Ay@q@aAOwAqAqAWs@L}@U{Aq@{@kGyCg@aAy@uIaAkAgBk@DcGeAkABTcD{Ak@sA_Dg@wFwEhEwHr@cE`BkAfGcBi@qBDsCpB}DgAyAaAYs@oA{@bAqBb@m@Q_@g@uB{I}B{CyAb@TuDt@g@Hu@h@_KoBeIQsEaA}A^g@jD@dCmBdAaBnBm@|@eDtDcFn@yCqAg@rBs@rAQk@}@j@BO]XEeDcBj@{@h@?gBiARCMOrB?T]e@QvEs@hA}@D_@ZTc@?j@q@Bo@IRbBeF`HM`BiAjBhA|BRVMBuAu@}@SgA\\z@DeARn@\\DHWDt@x@p@rBYdF_DpDyC|@GNc@iEIo@q@o@gG\\}AtCaER{@fBs@jAmALs@pFqCzD{C|AJc@]b@?SUeF_A_A_A]kE~@aCFcBa@wAwAuBgBM?ZjAQKe@`Cu@lBcAPe@rHuBpA_BjDuH|BjAdAnAlATbBa@rDyB[aAgBBy@g@aBgPmBgDcEqDOw@d@iGd@eBZGYIH`E^{@TcC~AcBlAqC_CEgCkDoEcCf@aIEeBo@yCEmBZeBkAoGZo@oAoDIcE]oA~@}@CsA]eB_ByBC}BGe@SJJkCe@_BMwF]mBVg@W]h@wDa@wCb@sBCmAbAoH{AkA@[DD_@Pe@QQNCjAsBjEyCjAoA|AmBXGzAmCdIwAnHa@XcA@{HeFwBUmFl@e@a@oBnDgA|Gh@l@b@~GpEzKp@zZtAlGKtCV`GWlAq@z@mC]}@sCiB{CsBw@}Ey@gC{DHWO^u@mBkAQoBbAaBQg@VsDiC]ZqCSmFdAkCwHMmAVm@cC{DK}CIm@cHXm@x@mCf@aFXcC[u@p@_@GTmGSaE`@yAuAbAQ|@DsA`A}Bu@e@{AsEuC}@sAeBkBiHc@mET}BzDyFPaBfAs@v@yAQuCgDaB_@m@Bw@wBJ?q@eBf@Et@^l@i@FT`@mBLgAy@}AiDeBWkCkC_DXu@}Bu@jCJx@SjBv@c@OXJlDm@|EdBu@`@n@n@cAEtBq@n@wAjDgC^W`AqAdAUr@NPiCpBs@MuB_Eg@YsAn@eA_A]cB}BgAy@hBa@fC{DtA",
+                "distance": 23094,
+                "elevGain": 1392
+            },
+            {
+                "id": "gr10-31",
+                "title": "[GR10] [31] Refuge du Ras de la Carança to Py",
+                "polyline": "_odbGaqqLEo@XoCv@{EEi@TOg@kCVYOqBvCgBjAeANyAn@eAA_@h@I?gAu@s@U}@[?o@sCeBa@_FsCSmBwA_B{@SaAaBm@uCiAmAAyAg@oA]iEL{A]Qe@iBm@y@KkA}@u@SyAm@aAC}B_@kEj@kD?eAtAsE|@wAPuB~@wAF_A`AeA@q@dCqB?sBi@kCJ}@l@g@RgCx@SP[@g@|ADX_Ap@MbByBpAK|CL`@aBKa@wDiBO]^W[_@EcByAaAM_AiA_Bu@ScBPk@[]gAiCoAq@gBI}BNMg@aCeAuBj@uAbCu@tBgBpF}IrDuDzBmD~BmBH_BwAsJj@_BhAeJvEwJdA{EzBsBPmC|DcB~AeAWeA_@OVKAk@Y[VUaAo@HY[SJQSYf@IW_@C]b@M[kAl@EOQVMDUQMRIYe@bBgAt@{Ar@UCaAOm@_BeA[qABu@m@o@[wC_AyAO{Bs@qCk@e@c@gCw@gAi@_Cw@cA[wAqC_G_@c@_@N}As@i@_A_By@[iAeAuAu@uDk@q@sAe@m@u@Us@eA_@Ak@_CoCkAqDq@Ym@o@Dy@e@FMa@_AN}DnCm@Ck@k@p@]JYW[lAqA{AEk@c@cBmDc@K]}A_Ae@@i@Qg@]FYw@w@W}AmBiFw@Io@oCmC}BuCmCkDFSgAkAYw@H_@_@s@`@HCg@SYOKVJe@mBoAsB?eAeDqA{FgIq@D_@l@z@y@J{B[Sg@TaAkAUaCSW@oBk@oCH]q@{ADu@PKy@G?}@U}@SG_@t@KfDQkB{AuEV_Ce@lAe@oEu@~Am@_ESoC_A~@_@{De@nAP{AUeAiAfB]{CBsBgAhA[aGeAiAQ_@b@n@kA}Bi@_@y@FK_B_@Pf@qAMc@PDm@HJy@a@LBW_ATZa@Cm@QY]PNy@QId@iCSw@MNQa@}@x@F{@[EAwCaA{AWiAA_Ce@yA}AuBmBiAqAkCoDmDIYjCJUe@HVZU?o@uALm@[wBoB_Ar@DaD_@kCoAk@OqAsBsCa@oCk@oAB{AYHPcBs@}HVmBQo@k@UTWo@q@q@Ag@{AyDwFkCeANs@UyBFiBc@yDNH[iCUuJDiEl@yAcA_HLmCWA@q@ULCg@iBlDEuAKUOXEmAo@f@aAKb@gA@wAY{Dk@aBTUy@gBm@eEoCuJ",
+                "distance": 17740,
+                "elevGain": 904
+            }
+        ]
+    },
+    {
+        "name": "Tour du Mont Blanc",
+        "description": "The Tour du Mont Blanc (TMB) is one of the most famous long-distance hiking trails in Europe, encircling the Mont Blanc massif and passing through France, Italy, and Switzerland. The trail covers approximately 170 kilometers (105 miles) and typically takes around 10 to 12 days to complete, depending on the hiker's pace and chosen route. The TMB is renowned for its breathtaking alpine scenery, including towering peaks, glaciers, lush valleys, and picturesque villages. Hikers on the TMB can experience a variety of landscapes, from rugged mountain terrain to verdant meadows and charming alpine towns. The trail is well-marked with red and white blazes, making it easy for hikers to navigate. Along the way, hikers can enjoy a range of accommodations, from mountain huts (refuges) to charming guesthouses in the villages. The TMB is a popular destination for outdoor enthusiasts and offers opportunities for cultural experiences, as it passes through regions with distinct traditions and cuisines.",
+        "startedAt": "2023-09-20",
+        "completedAt": "2023-09-24",
+        "location": [
+            45.8469055686146,
+            7.033301638439298
+        ],
+        "stages": [
+            {
+                "id": "tmb-3",
+                "title": "TMB 3/5",
+                "polyline": "mkyvGy}|i@d@eJyCo@UgBeACaAsByC|AcD~De@UCcBgFkCqWcFoIiNg@oEsDyK}H{H?kAoFmCyJsKuC{LoCkGQwG_A_KuAeA_@yB{C?yAkBg@pAqGi@qLkH~EvHb@fDpDbGm@LXlA}NyFp@bCs@Lp@hCsDsCHx@c@J|@fCo@d@TfAoBaAu@r@j@`Dg@~Fg@}G{F{N\\YcAqEiAIs@yAkAP{BeCg@iC_Cm@q@cC}Am@oDeFuCoBUwBm@ViBiA{CaCiCeD{Cs@uGsEWx@eEoC{EIoB}B[gD~AoDtI}@sA}A~Aa@_FoEjEuCJe@sAe@DkCtCmJ?uCd@Oh@}F[ROgAkCzBAmDeAc@sItFg@mE{B_FkIyByEC_@w@{GHuC{BWmDiCgIFcFk@iDBeEdB}@nAsEw@k@cAyEe@iZXkGc@qGgBeFGmDmDmOkGoMmEsPsC}WcA{DcD}FnB_@uGwHkFmCnGkAhHfBo@eGoAeCuF}CjAs@`F~@iFwFyFiCkBBzAoAqCC_@nBmCX}BrCv@eCQwAtB{@gGPUtD}M`P_@xBkA?eD`Ep@aF`C_IbBwDg@c@kEdCqI`KwBd@pB}@{@`JaIhKiCxAuCtGwDtA_BfCqHnFwFlAAjBn@HS`AaDzB{FhHoAdD@fAwFb@oCbDeEzBmH|NsBnBwBDaBrC}CsDn@gAMg@wCz@gKKmElD_C\\oPeSyWx@[`Cq@r@MfHuDpDcBcByI|@oK{DgErAuJyA{GaNkFoCkGo@}GgHcD{DmBd@uDeCcEl@gG}B}KsLoDB{HeFqDqL}C}@oGLgHfBkFy@mGz@mCwCiDqAaINeF{AsAn@aAuCd@FOq@eB_Be@oBaZoFgDeD{PrB]yEhD}U]eIe@qDiKiXeBvCmLlEiG|EcDmAwBt@oBcAuFwJuDsBU_ChB_Fy@_B_DcAiQJqFyAmFsD{De@cIn@{@}@g@tAcBBgEsAiCd@{J`Gq@rE}DjA{K~FcBfE_A{AwBnAiCh@eIeBZjB{@dAEjCoBnGqCtCA|CcBdFsAsIeEg@qEqFAbCkAzB}HWeBxB}Cv@cBHyBkD}A{@pBrCJvAC~@[dAa@w@SjBgCeAsBkByBYi@t@{BiBsACaD_DgA@{BqBsDq@kA{C}FtBnBsDIuBWyAiC`CuDpJaBFiAzAy@dIwGjGeC|Cm@|Hs@bA@tBwC`Mm@dIDfHlA`@nBxEc@xC`A|WuBpBR|C]rA_A`@CzCf@`HrBxJKtJnAF",
+                "distance": 38517,
+                "elevGain": 1657
+            }
+        ]
+    }
+]
