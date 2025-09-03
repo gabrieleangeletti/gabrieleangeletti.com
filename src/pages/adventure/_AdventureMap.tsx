@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { renderToString } from "react-dom/server";
 import { decode } from "@googlemaps/polyline-codec";
-import { Map, Popup, NavigationControl, ScaleControl, LngLatLike } from "maplibre-gl";
+import { Map, Popup, NavigationControl, ScaleControl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import AdventureMapPopup from "./_AdventureMapPopup";
@@ -17,7 +17,7 @@ const AdventureMap = ({ data }: { data: Adventure[] }) => {
     if (!map || !map.isStyleLoaded()) return;
 
     map.flyTo({
-      center: adventure.location.slice().reverse() as LngLatLike,
+      center: [adventure.location.lng, adventure.location.lat],
       zoom: 9,
       speed: 1.5,
     });
@@ -103,7 +103,7 @@ const AdventureMap = ({ data }: { data: Adventure[] }) => {
     const map = new Map({
       container: "map",
       style: "https://tiles.openfreemap.org/styles/liberty",
-      center: mostRecentAdventure.location.slice().reverse() as LngLatLike,
+      center: [mostRecentAdventure.location.lng, mostRecentAdventure.location.lat],
       zoom: 9,
     });
 
@@ -134,7 +134,7 @@ const AdventureMap = ({ data }: { data: Adventure[] }) => {
       const stage = event.detail;
       if (stage.location) {
         map.flyTo({
-          center: stage.location.slice().reverse() as LngLatLike,
+          center: [stage.location.lng, stage.location.lat],
           zoom: 13,
           speed: 1.5,
         });

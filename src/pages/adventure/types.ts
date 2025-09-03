@@ -2,9 +2,14 @@ export type Adventure = {
   name: string;
   description: string;
   kind: "thru-hiking" | "fast-packing";
+  distance: number;
+  elevGain: number;
   startedAt: string;
   completedAt: string;
-  location: LatLng;
+  location: {
+    lat: number;
+    lng: number;
+  };
   countries: string[];
   stages: Route[];
 };
@@ -15,7 +20,10 @@ export type Route = {
   distance: number;
   elevGain: number;
   polyline: string;
-  location: LatLng;
+  location: {
+    lat: number;
+    lng: number;
+  };
 };
 
 export type LatLng = [number, number];

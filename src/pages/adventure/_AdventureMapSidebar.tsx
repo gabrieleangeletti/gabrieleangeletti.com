@@ -46,7 +46,7 @@ const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
     "absolute top-0 right-0 h-full z-10 flex flex-col",
     "bg-base-100 shadow-lg rounded-l-xl overflow-hidden",
     "transition-all duration-300 ease-in-out",
-    isOpen ? "w-[35%]" : "w-[50px]",
+    isOpen ? "w-[45%]" : "w-[50px]",
   ].join(" ");
 
   return (
@@ -92,6 +92,28 @@ const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
                         <div className="font-semibold text-base-content/60">Style</div>
                         <div className="text-base-content capitalize">
                           {adventure.kind.replace("-", " ")}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-base-content/60">Distance</div>
+                        <div className="text-base-content">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "unit",
+                            unit: "kilometer",
+                            unitDisplay: "short",
+                            maximumFractionDigits: 1,
+                          }).format(adventure.distance / 1000)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-base-content/60">Elevation Gain</div>
+                        <div className="text-base-content">
+                          {new Intl.NumberFormat("en-US", {
+                            style: "unit",
+                            unit: "meter",
+                            unitDisplay: "short",
+                            maximumFractionDigits: 0,
+                          }).format(adventure.elevGain)}
                         </div>
                       </div>
                     </div>
