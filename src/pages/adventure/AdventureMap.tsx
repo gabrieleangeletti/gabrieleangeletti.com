@@ -5,7 +5,7 @@ import { Map, Popup, NavigationControl, ScaleControl, LngLatLike } from "maplibr
 import "maplibre-gl/dist/maplibre-gl.css";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import AdventureMapPopup from "./AdventureMapPopup";
-import type { Adventure, LngLat } from "./types";
+import type { Adventure, Route, LngLat } from "./types";
 
 const AdventureMap = ({ data }: { data: Adventure[] }) => {
   const mapRef = useRef<Map | null>(null);
@@ -123,6 +123,28 @@ const AdventureMap = ({ data }: { data: Adventure[] }) => {
     window.addEventListener("adventure-selected", handleAdventureSelect as EventListener);
     return () => {
       window.removeEventListener("adventure-selected", handleAdventureSelect as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const handleStageSelect = (event: CustomEvent<Route>) => {
+      const stage = event.detail;
+      if (stage.location) {
+        map.flyTo({
+          center: stage.location.slice().reverse() as LngLatLike,
+          zoom: 13,
+          speed: 1.5,
+        });
+      }
+    };
+
+    window.addEventListener("stage-selected", handleStageSelect as EventListener);
+
+    return () => {
+      window.removeEventListener("stage-selected", handleStageSelect as EventListener);
     };
   }, []);
 

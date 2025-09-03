@@ -2,7 +2,7 @@ import React from "react";
 
 const mapStyles = [
   {
-    name: "Liberty",
+    name: "Default",
     url: "https://tiles.openfreemap.org/styles/liberty",
   },
   {
