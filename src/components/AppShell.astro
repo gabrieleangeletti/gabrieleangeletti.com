@@ -10,8 +10,70 @@ import BurgerMenu from "./BurgerMenu.astro";
   <div class="absolute top-6 right-6">
     <ThemeToggle />
   </div>
-  <main class="lg:ml-48 ml-0 pt-20 lg:pt-0 px-6 lg:px-0">
+  <main id="main-content" class="pt-20 lg:pt-0 px-6 lg:px-0 transition-[padding] duration-300 ease-in-out">
     <slot />
   </main>
 </div>
+
+<script>
+  const burgerMenu = document.getElementById("burger-menu");
+  const sidebar = document.getElementById("sidebar");
+  const mainContent = document.getElementById("main-content");
+  const burgerIcon = document.getElementById("burger-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  const openSidebar = () => {
+    sidebar?.classList.remove("-translate-x-full");
+    sidebar?.classList.add("translate-x-0");
+    mainContent?.classList.add("lg:pl-48");
+    burgerIcon?.classList.add("hidden");
+    closeIcon?.classList.remove("hidden");
+  };
+
+  const closeSidebar = () => {
+    sidebar?.classList.add("-translate-x-full");
+    sidebar?.classList.remove("translate-x-0");
+    mainContent?.classList.remove("lg:pl-48");
+    burgerIcon?.classList.remove("hidden");
+    closeIcon?.classList.add("hidden");
+  };
+
+  const isSidebarOpen = () => {
+    return sidebar?.classList.contains("translate-x-0");
+  };
+
+  function setSidebarState(isOpen) {
+    if (isOpen) {
+      openSidebar();
+    } else {
+      closeSidebar();
+    }
+  }
+
+  function toggleSidebar() {
+    const isOpen = sidebar?.classList.contains("translate-x-0");
+    setSidebarState(!isOpen);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.innerWidth >= 1024) {
+      setSidebarState(true);
+    } else {
+      setSidebarState(false);
+    }
+  });
+
+  burgerMenu?.addEventListener("click", toggleSidebar);
+
+  const navLinks = sidebar?.querySelectorAll("a");
+  navLinks?.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth < 1024) {
+        if (isSidebarOpen()) {
+          toggleSidebar();
+        }
+      }
+    });
+  });
+</script>
 
