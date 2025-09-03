@@ -5,6 +5,7 @@ export type Adventure = {
   startedAt: string;
   completedAt: string;
   location: LatLng;
+  countries: string[];
   stages: Route[];
 };
 

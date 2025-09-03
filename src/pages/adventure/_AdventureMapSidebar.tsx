@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaHiking, FaRunning } from "react-icons/fa";
+import { ReactCountryFlag } from "react-country-flag";
 import type { Adventure, Route } from "./types";
 
 const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
@@ -68,10 +69,12 @@ const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
                 }`}
               >
                 <button
-                  className="collapse-title text-md font-semibold cursor-pointer"
+                  className="collapse-title text-md font-semibold cursor-pointer flex items-center"
                   onClick={() => handleSelectAdventure(adventure)}
                 >
-                  {adventure.name} <AdventureIcon kind={adventure.kind} />
+                  <span className="flex-grow">
+                    {adventure.name} <AdventureIcon kind={adventure.kind} />
+                  </span>
                 </button>
                 <div className="collapse-content">
                   <div className="mb-4">
@@ -90,6 +93,21 @@ const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
                         <div className="text-base-content capitalize">
                           {adventure.kind.replace("-", " ")}
                         </div>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <div className="font-semibold text-base-content/60">Countries</div>
+                      <div className="flex items-center space-x-4 mt-1">
+                        {adventure.countries.map((code) => (
+                          <div key={code} className="flex items-center space-x-2">
+                            <ReactCountryFlag
+                              countryCode={code}
+                              svg
+                              style={{ width: "1.5em", height: "1.5em" }}
+                            />
+                            <span className="font-medium text-base-content">{code}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>

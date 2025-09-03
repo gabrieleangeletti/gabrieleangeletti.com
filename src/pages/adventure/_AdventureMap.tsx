@@ -4,7 +4,7 @@ import { decode } from "@googlemaps/polyline-codec";
 import { Map, Popup, NavigationControl, ScaleControl, LngLatLike } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { schemeCategory10 } from "d3-scale-chromatic";
-import AdventureMapPopup from "./AdventureMapPopup";
+import AdventureMapPopup from "./_AdventureMapPopup";
 import type { Adventure, Route, LngLat } from "./types";
 
 const AdventureMap = ({ data }: { data: Adventure[] }) => {
