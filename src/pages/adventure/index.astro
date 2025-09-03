@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
 import AdventureMap from "./AdventureMap";
 import AdventureMapSidebar from "./AdventureMapSidebar";
+import MapStyleSelector from "./MapStyleSelector";
 import data from "./data.json";
 ---
 
@@ -11,6 +12,7 @@ import data from "./data.json";
     <div style="position: relative; width: 100%; height: 800px;">
       <div id="map" style="width: 100%; height: 100%;"></div>
       <AdventureMapSidebar data={data} client:load />
+      <MapStyleSelector client:load />
     </div>
   </AppShell>
   <AdventureMap data={data} client:only />

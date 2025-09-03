@@ -1,22 +1,5 @@
 import React, { useState } from "react";
-
-type LatLng = [number, number];
-
-type Route = {
-  id: string;
-  title: string;
-  distance: number;
-  elevGain: number;
-  polyline: string;
-};
-
-type Adventure = {
-  name: string;
-  description: string;
-  completedAt: string;
-  location: LatLng;
-  stages: Route[];
-};
+import type { Adventure } from "./types";
 
 const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
   const [isOpen, setIsOpen] = useState(true);

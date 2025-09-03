@@ -22,3 +22,26 @@
 [data-theme="cupcake"] {
   --default-font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+/*
+  This is a necessary override for the MapLibre GL JS library.
+  The library creates a wrapper (.maplibregl-popup-content) around our custom popup component.
+  These styles make that wrapper transparent and remove its padding/shadow,
+  allowing our custom-styled React component to be the only visible element.
+*/
+.maplibregl-popup-content {
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Custom styles for the adventure map controls */
+.sidebar-closed .maplibregl-ctrl-top-left {
+  transition: left 0.3s ease-in-out !important;
+  left: 4rem !important;
+}
+
+.sidebar-open .maplibregl-ctrl-top-left,
+.sidebar-open .maplibregl-ctrl-bottom-left {
+  left: calc(1rem) !important;
+}

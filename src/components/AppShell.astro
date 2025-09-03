@@ -10,12 +10,13 @@ import BurgerMenu from "./BurgerMenu.astro";
   <div class="absolute top-6 right-6">
     <ThemeToggle />
   </div>
-  <main id="main-content" class="pt-20 lg:pt-0 px-6 lg:px-0 transition-[padding] duration-300 ease-in-out">
+  <main id="main-content" class="transition-[padding] duration-300 ease-in-out">
     <slot />
   </main>
 </div>
 
 <script>
+  const body = document.body;
   const burgerMenu = document.getElementById("burger-menu");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("main-content");
@@ -28,6 +29,8 @@ import BurgerMenu from "./BurgerMenu.astro";
     mainContent?.classList.add("lg:pl-48");
     burgerIcon?.classList.add("hidden");
     closeIcon?.classList.remove("hidden");
+    body.classList.add("sidebar-open");
+    body.classList.remove("sidebar-closed");
   };
 
   const closeSidebar = () => {
@@ -36,6 +39,8 @@ import BurgerMenu from "./BurgerMenu.astro";
     mainContent?.classList.remove("lg:pl-48");
     burgerIcon?.classList.remove("hidden");
     closeIcon?.classList.add("hidden");
+    body.classList.remove("sidebar-open");
+    body.classList.add("sidebar-closed");
   };
 
   const isSidebarOpen = () => {
