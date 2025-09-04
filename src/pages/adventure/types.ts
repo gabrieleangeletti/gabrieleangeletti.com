@@ -1,7 +1,7 @@
 export type Adventure = {
   name: string;
   description: string;
-  kind: "thru-hiking" | "fast-packing";
+  kind: AdventureKind;
   distance: number;
   elevGain: number;
   startedAt: string;
@@ -13,6 +13,8 @@ export type Adventure = {
   countries: string[];
   stages: Route[];
 };
+
+export type AdventureKind = "thru-hiking" | "fast-packing" | "bike-packing";
 
 export type Route = {
   id: string;

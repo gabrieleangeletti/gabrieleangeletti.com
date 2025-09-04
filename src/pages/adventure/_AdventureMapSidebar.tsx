@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { FaHiking, FaRunning } from "react-icons/fa";
+import { FaBicycle, FaHiking, FaRunning } from "react-icons/fa";
 import { ReactCountryFlag } from "react-country-flag";
-import type { Adventure, Route } from "./types";
+import type { Adventure, AdventureKind, Route } from "./types";
 
 const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -35,18 +35,38 @@ const AdventureMapSidebar = ({ data }: { data: Adventure[] }) => {
     });
   };
 
-  const AdventureIcon = ({ kind }: { kind: "thru-hiking" | "fast-packing" }) => {
-    if (kind === "fast-packing") {
-      return <FaRunning className="inline-block ml-2 text-base-content/60" />;
-    }
-    return <FaHiking className="inline-block ml-2 text-base-content/60" />;
+  const AdventureIcon = ({ kind }: { kind: AdventureKind }) => {
+    const kindConfig = {
+      "fast-packing": {
+        icon: FaRunning,
+        className: "bg-blue-500",
+      },
+      "thru-hiking": {
+        icon: FaHiking,
+        className: "bg-teal-500",
+      },
+      "bike-packing": {
+        icon: FaBicycle,
+        className: "bg-green-500",
+      },
+    };
+
+    const { icon: Icon, className } = kindConfig[kind];
+
+    return (
+      <span
+        className={`inline-flex items-center justify-center w-5 h-5 rounded-full ml-2 ${className}`}
+      >
+        <Icon className="text-white text-xs" />
+      </span>
+    );
   };
 
   const containerClasses = [
     "absolute top-0 right-0 h-full z-10 flex flex-col",
     "bg-base-100 shadow-lg rounded-l-xl overflow-hidden",
     "transition-all duration-300 ease-in-out",
-    isOpen ? "w-[45%]" : "w-[50px]",
+    isOpen ? "w-[40%]" : "w-[50px]",
   ].join(" ");
 
   return (
