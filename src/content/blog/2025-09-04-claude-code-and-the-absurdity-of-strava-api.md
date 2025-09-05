@@ -1,7 +1,7 @@
 ---
 title: On Claude Code, and Strava’s API absurdities
 slug: on-claude-code-and-strava-api-absurdities
-excerpt: A great excerpt.
+excerpt: Thoughts on Claude Code, coding agents in general, and frustrating experiences integrating with Strava's API.
 author: Gabriele Angeletti
 timestamp: 2025-09-04
 status: published
@@ -37,13 +37,13 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 **Claude**:
 
 > This is a great architectural question!
-> 
+>
 > You're right that there's a tension between preserving the raw API data structure and providing a unified interface for consumers. Here are a few approaches to consider:
 >
 > Option 1: Keep Raw Types + Unified Conversion (Recommended)
 >
 > Keep ActivitySummary and ActivityDetailed as separate types that mirror Strava's API exactly, but provide conversion methods that can work with either or both:
-> 
+>
 > ```go
 > // In stride package
 > func ActivityFromStravaSummary(summary *strava.ActivitySummary) *Activity { ... }
@@ -52,13 +52,14 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > ```
 >
 > Benefits:
+>
 > - Preserves raw data integrity
 > - Caller can store exactly what Strava returned
 > - Flexible - can work with either endpoint
 > - Single unified Activity type for business logic
 >
 > Option 2: Composition with Raw Preservation
-> 
+>
 > Create a container that holds the raw responses:
 >
 > ```go
@@ -68,7 +69,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > }
 > func (s *StravaActivityData) ToActivity() *stride.Activity { ... }
 > ```
-> 
+>
 > Option 3: Field Promotion in Unified Type
 >
 > Create a unified Strava type that includes all possible fields from both APIs:
@@ -81,14 +82,15 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > ```
 >
 > My Recommendation: Option 1
-> 
+>
 > I'd suggest Option 1 because:
+>
 > 1. Preserves API fidelity - Raw data stays exactly as Strava returns it
 > 2. Supports your storage requirement - You can marshal/store the exact Strava responses
 > 3. Provides clean abstraction - The stride Activity type gets all fields it needs
 > 4. Handles API evolution - If Strava changes what fields are in which endpoints, only conversion logic changes
 > 5. Explicit about data source - Clear which fields came from which API call
-> 
+>
 > The conversion functions can intelligently merge data when both are available, with detailed data taking precedence for overlapping fields.
 > What's your take on this approach? Does it align with your architecture goals?
 
@@ -100,6 +102,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 
 > Excellent context! Given your provider_activity_raw_data table with a JSONB column, Option 2 (Composition) becomes the clear winner. Here's why:
 > Recommended: Option 2 with Database Considerations
+>
 > ```go
 > type StravaActivityData struct {
 >   Summary  *ActivitySummary  `json:"summary,omitempty"`
@@ -108,7 +111,9 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >   FetchedAt map[string]time.Time `json:"fetched_at,omitempty"` // "summary": timestamp, "detailed": timestamp
 > }
 > ```
+>
 > Store this in your JSONB column:
+>
 > ```json
 > {
 >   "summary": { /* ActivitySummary as returned by Strava */ },
@@ -119,13 +124,17 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >   }
 > }
 > ```
+>
 > Why This Works Perfectly for Your Setup:
+>
 > 1. Single database record - One row per activity in provider_activity_raw_data
 > 2. True raw data preservation - Both API responses stored exactly as Strava returned them
 > 3. Incremental data collection - Start with summary, add detailed later when needed
 > 4. API call audit trail - You can see which endpoints were hit and when
 > 5. Backward compatibility - Existing records with just summary data still work
+>
 > Usage Pattern:
+>
 > ```go
 > // Initially store just summary data
 > data := &StravaActivityData{
@@ -138,6 +147,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > // Convert to unified Activity type when needed
 > activity := data.ToActivity()
 > ```
+>
 > This approach gives you maximum flexibility while preserving the raw data contract. What do you think about this structure?
 
 **Me**:
@@ -147,10 +157,11 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 **Claude**:
 
 > Excellent point! The naive data = EXCLUDED.data approach would indeed overwrite existing data. Here are a few solutions:
-> 
+>
 > Option 1: PostgreSQL JSONB Merge (Recommended)
-> 
+>
 > Use PostgreSQL's native JSONB operators to merge instead of replace:
+>
 > ```sql
 > INSERT INTO provider_activity_raw_data (activity_id, data, updated_at)
 > VALUES ($1, $2, NOW())
@@ -159,11 +170,13 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >     data = provider_activity_raw_data.data || EXCLUDED.data,
 >     updated_at = EXCLUDED.updated_at;
 > ```
+>
 > The || operator does a shallow merge - perfect for your structure since summary and detailed are top-level keys.
-> 
+>
 > Option 2: Deep Merge with jsonb_deep_merge
-> 
+>
 > If you need deeper merging (e.g., merging within fetched_at), you can use a custom function:
+>
 > ```sql
 >  CREATE OR REPLACE FUNCTION jsonb_deep_merge(a jsonb, b jsonb)
 >  RETURNS jsonb LANGUAGE sql AS $$
@@ -175,8 +188,9 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >  ```
 >
 > Option 3: Application-Level Merge
-> 
+>
 > Handle the merge in your application before the database call:
+>
 > ```go
 > // Fetch existing data first
 > existingData := fetchExistingStravaData(activityID)
@@ -191,14 +205,16 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > }
 > // Then do a simple upsert
 > ```
+>
 > My Recommendation: Option 1
 > PostgreSQL's || operator is perfect for your use case because:
->  - Simple and fast - No custom functions needed
->  - Atomic operation - No race conditions
->  - Natural fit - Your structure has distinct top-level keys
->  - PostgreSQL native - Well-optimized and reliable
+>
+> - Simple and fast - No custom functions needed
+> - Atomic operation - No race conditions
+> - Natural fit - Your structure has distinct top-level keys
+> - PostgreSQL native - Well-optimized and reliable
 >  
->  The || operator will preserve existing summary when you add detailed, and vice versa. What's your preference among these approaches?
+> The || operator will preserve existing summary when you add detailed, and vice versa. What's your preference among these approaches?
 
 **Me**:
 
@@ -208,14 +224,16 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 
 > You raise an excellent point! The 90%+ overlap creates real problems:
 > Problems with Storing Both Raw Types:
->    - Storage bloat - Duplicating most fields
->    - Data consistency nightmares - Which distance is correct if they differ?
->    - Maintenance burden - Need to keep fields in sync
->    - Query complexity - Which field do you read from?
+>
+> - Storage bloat - Duplicating most fields
+> - Data consistency nightmares - Which distance is correct if they differ?
+> - Maintenance burden - Need to keep fields in sync
+> - Query complexity - Which field do you read from?
 >
 > Reconsidering Option 3: Union Type
-> 
+>
 > Given your storage constraints, Option 3 actually makes more sense:
+>
 > ```go
 >  type StravaActivity struct {
 >      // Fields present in both (use detailed when available)
@@ -237,17 +255,21 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >      } `json:"_data_source"`
 >  }
 > ```
->  Benefits of This Approach:
->    - No redundancy - Each field stored once
->    - No consistency issues - Single source of truth
->    - Cleaner queries - Just read the field you need
->    - Efficient storage - JSONB compression works better
->    - Clear data lineage - Metadata tracks what was fetched
->  Trade-offs:
->    - ❌ Not "raw" Strava data - You lose exact API response preservation
->    - ✅ But you gain - Storage efficiency, consistency, simplicity
->  Hybrid Alternative:
->  Store the union type in your main JSONB column, but optionally keep a raw_responses JSONB column for debugging:
+>
+> Benefits of This Approach:
+>
+> - No redundancy - Each field stored once
+> - No consistency issues - Single source of truth
+> - Cleaner queries - Just read the field you need
+> - Efficient storage - JSONB compression works better
+> - Clear data lineage - Metadata tracks what was fetched
+> Trade-offs:
+>   - ❌ Not "raw" Strava data - You lose exact API response preservation
+>   - ✅ But you gain - Storage efficiency, consistency, simplicity
+>
+> Hybrid Alternative:
+> Store the union type in your main JSONB column, but optionally keep a raw_responses JSONB column for debugging:
+>
 > ```sql
 > CREATE TABLE provider_activity_raw_data (
 >      activity_id BIGINT PRIMARY KEY,
@@ -256,6 +278,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >      updated_at TIMESTAMP
 >  );
 > ```
+>
 > My updated recommendation: Go with Option 3 (union type). The storage efficiency and consistency benefits outweigh the "raw data" purity, especially given your 90% overlap constraint.
 > What's your take on this trade-off?
 
@@ -267,22 +290,24 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 
 > Excellent decision! This is actually the cleanest approach and makes perfect sense from both technical and business perspectives:
 > Why This is Smart:
->    1. Rate Limit Optimization
->    - Detailed calls are the bottleneck (1:1 vs 200:1 for summaries)
->    - Focus on the scarce resource - makes economic sense
->    - Simpler API strategy - no complex orchestration between endpoints
->    2. Data Quality Benefits
->    - ActivityDetailed should be a superset of ActivitySummary
->    - Heart rate from streams is likely more accurate than summary averages
->    - Single source of truth - no consistency issues
->    3. Architectural Simplicity
->    - One type to store: ActivityDetailed
->    - One conversion function: ActivityDetailed → stride.Activity
->    - No union types, no merge logic, no redundancy
->    - Clean database schema
->    4. Computational Trade-offs Make Sense
->    // Instead of storing summary heart rate stats, compute from streams:
+>
+> - Rate Limit Optimization
+>   - Detailed calls are the bottleneck (1:1 vs 200:1 for summaries)
+>   - Focus on the scarce resource - makes economic sense
+>   - Simpler API strategy - no complex orchestration between endpoints
+> - Data Quality Benefits
+>   - ActivityDetailed should be a superset of ActivitySummary
+>   - Heart rate from streams is likely more accurate than summary averages
+>   - Single source of truth - no consistency issues
+> -. Architectural Simplicity
+>   - One type to store: ActivityDetailed
+>   - One conversion function: ActivityDetailed → stride.Activity
+>   - No union types, no merge logic, no redundancy
+>   - Clean database schema
+> - Computational Trade-offs Make Sense
+>
 > ```go
+>    // Instead of storing summary heart rate stats, compute from streams:
 >    func computeHeartRateStats(streams *ActivityStream) (avg, max uint8) {
 >        // More accurate than Strava's pre-computed averages
 >        // Can apply custom filtering/smoothing
@@ -294,6 +319,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >        FetchedAt time.Time        `json:"fetched_at"`
 >    }
 > ```
+>
 > This eliminates all the complexity we discussed while optimizing for your actual constraints. Sometimes the simplest solution really is the best!
 > The only consideration: initial data collection will be slower, but that's a one-time cost vs. ongoing complexity.
 
