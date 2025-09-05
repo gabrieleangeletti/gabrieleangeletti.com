@@ -16,3 +16,4 @@ Below you can find language-specific instructions.
 - Do not explictly write a type when it can be automatically inferred.
 - Do not use `<Foo {...props} />` for React components. Instead, list out all props: `<Foo bar={props.bar} >`.
 - Do not rename component props, unless explicitly asked to.
+- When suggesting commands, please check `packageManager` in `package.json` to see which one to use.

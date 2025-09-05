@@ -21,6 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { tag } = Astro.props;
+const { backgroundColor, textColor } = getTagColor(tag);
 
 // Load all published posts and filter by tag
 const allEntries = await getCollection("blog");
@@ -52,7 +53,7 @@ const formatDate = (date: Date): string => {
 
         <h1 class="text-4xl font-bold text-base-content mb-2">
           Posts tagged "
-          <span class={`badge ${getTagColor(tag)} badge-lg`}>{tag}</span>
+          <span class="badge badge-lg" style={`background-color: ${backgroundColor}; color: ${textColor}`}>{tag}</span>
           "
         </h1>
         <p class="text-base-content/60 mb-12">
@@ -65,16 +66,18 @@ const formatDate = (date: Date): string => {
               <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="card-body">
                   <div class="flex flex-wrap gap-2 mb-4">
-                    {entry.data.tags.map((postTag) => (
-                      <a
-                        href={`/blog/tag/${postTag}`}
-                        class={`badge ${getTagColor(postTag)} badge-sm hover:scale-105 transition-transform cursor-pointer ${
-                          postTag === tag ? "ring-2 ring-primary" : ""
-                        }`}
-                      >
-                        {postTag}
-                      </a>
-                    ))}
+                    {entry.data.tags.map((postTag) => {
+                      const { backgroundColor, textColor } = getTagColor(postTag);
+                      return (
+                        <a
+                          href={`/blog/tag/${postTag}`}
+                          class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
+                          style={`background-color: ${backgroundColor}; color: ${textColor}`}
+                        >
+                          {postTag}
+                        </a>
+                      );
+                    })}
                   </div>
 
                   <a href={`/blog/${entry.data.slug}`} class="hover:text-primary transition-colors">

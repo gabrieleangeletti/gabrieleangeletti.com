@@ -37,14 +37,18 @@ const formatDate = (date: Date): string => {
               <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="card-body">
                   <div class="flex flex-wrap gap-2 mb-4">
-                    {entry.data.tags.map((tag) => (
-                      <a
-                        href={`/blog/tag/${tag}`}
-                        class={`badge ${getTagColor(tag)} badge-sm hover:scale-105 transition-transform cursor-pointer`}
-                      >
-                        {tag}
-                      </a>
-                    ))}
+                    {entry.data.tags.map((tag) => {
+                      const { backgroundColor, textColor } = getTagColor(tag);
+                      return (
+                        <a
+                          href={`/blog/tag/${tag}`}
+                          class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
+                          style={`background-color: ${backgroundColor}; color: ${textColor}`}
+                        >
+                          {tag}
+                        </a>
+                      );
+                    })}
                   </div>
 
                   <a href={`/blog/${entry.data.slug}`} class="hover:text-primary transition-colors">
