@@ -1,0 +1,84 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AppShell from '../../components/AppShell.astro';
+
+interface FitnessCard {
+  title: string;
+  description: string;
+  href: string;
+  category: string;
+}
+
+const fitnessCards: FitnessCard[] = [
+  {
+    title: "Achilles Tendon",
+    description: "Guide to achilles tendon care, strengthening exercises, and injury prevention strategies.",
+    href: "/fitness/training/achilles-tendon",
+    category: "Training"
+  }
+];
+
+const categories = ["Training", "Recovery", "Health"];
+const getCategoryCards = (category: string) => fitnessCards.filter(card => card.category === category);
+---
+
+<Layout
+  title="Fitness - Gabriele Angeletti"
+  description="Personal fitness knowledge base covering training, recovery, and health optimization strategies."
+>
+  <AppShell>
+    <div class="p-4 lg:py-18">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold text-base-content mb-4">Fitness</h1>
+          <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+            Personal knowledge base for training, recovery, and health optimization.
+          </p>
+          <p class="text-md text-base-content/50 max-w-3xl mx-auto mt-1">
+            I'm no fitness expert nor a professional. All the information here is based on my personal experience, and observing what works for me. Also, everything here is heavily tailored towards running.
+          </p>
+        </div>
+
+        <!-- Fitness Categories -->
+        <div class="space-y-12">
+          {categories.map(category => {
+            const categoryCards = getCategoryCards(category);
+            if (categoryCards.length === 0) return null;
+
+            return (
+              <section>
+                <h2 class="text-3xl font-bold text-base-content mb-2">{category}</h2>
+                <p class="text-base-content/60 mb-6">
+                  {category === "Training" && "Exercises, rehab/prehab programs, and strength training programs."}
+                  {category === "Recovery" && "Rest strategies, injury prevention, and rehabilitation approaches"}
+                  {category === "Health" && "Nutrition, wellness monitoring, and lifestyle optimization"}
+                </p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryCards.map(card => (
+                    <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-xl font-bold text-base-content mb-3">
+                        {card.title}
+                        </h3>
+                        <p class="text-base-content/80 leading-relaxed mb-4 flex-grow">
+                        {card.description}
+                        </p>
+                        <div class="card-actions justify-end">
+                        <a href={card.href} class="btn btn-primary btn-sm">
+                            Learn More
+                        </a>
+                        </div>
+                    </div>
+                    </div>
+                ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </AppShell>
+</Layout>

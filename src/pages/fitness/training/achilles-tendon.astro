@@ -1,0 +1,128 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AppShell from '../../../components/AppShell.astro';
+---
+
+<Layout
+  title="Achilles Tendon - Fitness - Gabriele Angeletti"
+  description="Comprehensive guide to achilles tendon care, strengthening exercises, and injury prevention strategies."
+>
+  <AppShell>
+    <div class="p-4 lg:py-18">
+      <div class="max-w-4xl mx-auto">
+        <div class="breadcrumbs text-sm mb-8">
+          <ul>
+            <li><a href="/fitness" class="text-primary hover:underline">Fitness</a></li>
+            <li><a href="/fitness#training" class="text-primary hover:underline">Training</a></li>
+            <li>Achilles Tendon</li>
+          </ul>
+        </div>
+
+        <div class="mb-4">
+            <h1 class="text-4xl font-bold text-base-content mb-4">Achilles Tendon</h1>
+            <h3 class="font-semibold text-base-content mb-2">Links</h3>
+            <ul class="text-base-content/80 space-y-1">
+                <li>• <a href="https://www.physio-pedia.com/Achilles_Tendon">Physio-pedia</a></li>
+            </ul>
+        </div>
+
+        <div class="space-y-12">
+          <section class="card bg-base-100 shadow-lg">
+            <div class="card-body">
+              <h2 class="card-title text-2xl mb-6">Strengthening Exercises</h2>
+              <div class="space-y-8">
+                <div class="border-l-4 border-secondary pl-6">
+                    <h3 class="text-xl font-semibold mb-3">Isometric Holds</h3>
+                    <p class="text-base-content/80 mb-3">
+                        Useful for early-stage rehabilitation. Good for for acute pain management, as it's been shown to reduce pain.<br>
+                        Note: increase intensity by adding weight, not increasing reps or duration. It's been shown that 45 seconds of isometric hold is enough to send a stimulus to the tendon.
+                    </p>
+                    <div class="bg-base-200 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">Protocol:</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Hold single-leg calf raise for 45''</li>
+                            <li>• 5 repetitions, 1 minute rest between</li>
+                            <li>• Pain should be 3/10 or less</li>
+                            <li>• If painless, increase intensity</li>
+                            <li>• 3x per week</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-l-4 border-primary pl-6">
+                  <h3 class="text-xl font-semibold mb-3">Eccentric Calf Raises</h3>
+                  <p class="text-base-content/80 mb-3">
+                      Gold standard for Achilles tendinopathy rehabilitation. Emphasize the slow movement, 3'' to rise, 3'' to lower, to promote tendon remodeling. Hold something for balance (this is not a balance exercise).<br>
+                      Note: if single-leg calf raises are too painful, consider raising with both legs and lowering with the affected leg only.
+                  </p>
+                  <div class="bg-base-200 p-4 rounded-lg">
+                    <h4 class="font-medium mb-2">Protocol:</h4>
+                    <ul class="text-sm space-y-1">
+                      <li>• Stand on edge of step with forefoot only</li>
+                      <li>• Single-leg calf raise: 3'' to rise, 3'' to lower</li>
+                      <li>• 3 sets of 15 reps</li>
+                      <li>• Pain should be 4/10 or less</li>
+                      <li>• Progress by adding weight</li>
+                      <li>• 2x per week</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+          </section>
+
+          <!-- Stretching & Mobility -->
+          <section class="card bg-base-100 shadow-lg">
+            <div class="card-body">
+              <h2 class="card-title text-2xl mb-6">Stretching & Mobility</h2>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold">Static Stretches</h3>
+                  <div class="space-y-3">
+                    <div class="p-4 bg-base-200 rounded-lg">
+                      <h4 class="font-medium mb-2">Wall Push Stretch</h4>
+                      <p class="text-sm text-base-content/80">
+                        Hands against wall, step back affected leg. Keep heel down, lean forward.
+                        Hold 30-60 seconds, 3 times.
+                      </p>
+                    </div>
+                    <div class="p-4 bg-base-200 rounded-lg">
+                      <h4 class="font-medium mb-2">Towel Stretch</h4>
+                      <p class="text-sm text-base-content/80">
+                        Sitting, loop towel around foot. Pull toes toward shin, hold 30 seconds.
+                        Repeat 3 times.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold">Dynamic Mobility</h3>
+                  <div class="space-y-3">
+                    <div class="p-4 bg-base-200 rounded-lg">
+                      <h4 class="font-medium mb-2">Ankle Circles</h4>
+                      <p class="text-sm text-base-content/80">
+                        10 circles each direction. Focus on full range of motion.
+                        Good warm-up exercise.
+                      </p>
+                    </div>
+                    <div class="p-4 bg-base-200 rounded-lg">
+                      <h4 class="font-medium mb-2">Calf Pumps</h4>
+                      <p class="text-sm text-base-content/80">
+                        Point and flex foot 20 times. Promotes blood flow and reduces stiffness.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="mt-12 text-center">
+          <a href="/fitness" class="btn btn-outline">
+            ← Back to Fitness
+          </a>
+        </div>
+      </div>
+    </div>
+  </AppShell>
+</Layout>
