@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
 import { getCollection } from "astro:content";
 import { getTagColor } from "./util";
+import { FiArrowRight } from "react-icons/fi";
 
 // Load all published posts
 const allEntries = await getCollection("blog");
@@ -69,7 +70,7 @@ const formatDate = (date: Date): string => {
                   href={`/blog/${entry.data.slug}`}
                   class="hover:text-primary transition-colors"
                 >
-                  <h2 class="text-2xl font-bold text-base-content mb-3 inline-flex items-center gap-3">
+                  <h2 class="text-2xl text-base-content mb-3 inline-flex items-center gap-3">
                     {entry.data.title}
                     {entry.data.type === "live" && (
                       <svg
@@ -112,7 +113,7 @@ const formatDate = (date: Date): string => {
                     href={`/blog/${entry.data.slug}`}
                     class="link link-primary link-hover"
                   >
-                    Read More
+                    Read More →
                   </a>
                 </div>
               </div>
