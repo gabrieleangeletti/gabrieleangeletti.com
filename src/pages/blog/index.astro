@@ -21,75 +21,126 @@ const formatDate = (date: Date): string => {
 
 <Layout
   title="Blog - Gabriele Angeletti"
-  description="Thoughts on software engineering, technology, and building great products. Read about clean code, scalable applications, and best practices."
+  description="Thoughts on software engineering, trail running, the outdoors, and anything in between."
 >
   <AppShell>
     <div id="blog" class="p-4 lg:py-18">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-bold text-base-content mb-2">Blog</h1>
-        <p class="text-base-content/60 mb-12">
-          Thoughts on software engineering, technology, and building great products.
-        </p>
+        <div class="text-center">
+          <h1 class="text-4xl font-bold text-base-content mb-2">Blog</h1>
+          <p class="text-base-content/60 mb-12">
+            Thoughts on software engineering, trail running, the outdoors, and
+            anything in between.
+          </p>
+        </div>
 
-        <div class="space-y-8">
+        <div class="flex justify-end mb-8">
+          <div class="tooltip tooltip-left" data-tip="These posts are never finished and are continuously updated over time.">
+            <label class="flex items-center cursor-pointer">
+              <input type="checkbox" id="live-filter" class="toggle toggle-primary" />
+              <span class="ml-2 text-base-content">Show only live posts</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
           {
-            publishedPosts.map((entry) => (
-              <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div class="card-body">
-                  <div class="flex flex-wrap gap-2 mb-4">
-                    {entry.data.tags.map((tag) => {
-                      const { backgroundColor, textColor } = getTagColor(tag);
-                      return (
-                        <a
-                          href={`/blog/tag/${tag}`}
-                          class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
-                          style={`background-color: ${backgroundColor}; color: ${textColor}`}
-                        >
-                          {tag}
-                        </a>
-                      );
-                    })}
-                  </div>
+            publishedPosts.map((entry, index) => (
+              <div
+                class={`py-8 post-item ${index !== publishedPosts.length - 1 ? "border-b border-base-content/10" : ""}`}
+                data-type={entry.data.type}
+              >
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {entry.data.tags.map((tag) => {
+                    const { backgroundColor, textColor } = getTagColor(tag);
+                    return (
+                      <a
+                        href={`/blog/tag/${tag}`}
+                        class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
+                        style={`background-color: ${backgroundColor}; color: ${textColor}`}
+                      >
+                        {tag}
+                      </a>
+                    );
+                  })}
+                </div>
 
-                  <a href={`/blog/${entry.data.slug}`} class="hover:text-primary transition-colors">
-                    <h2 class="card-title text-2xl font-bold text-base-content mb-3">
-                      {entry.data.title}
-                    </h2>
-                  </a>
-
-                  <div class="flex items-center gap-2 text-sm text-base-content/60 mb-4">
-                    {entry.data.author && (
-                      <>
-                        <span>By {entry.data.author}</span>
-                        <span>•</span>
-                      </>
+                <a
+                  href={`/blog/${entry.data.slug}`}
+                  class="hover:text-primary transition-colors"
+                >
+                  <h2 class="text-2xl font-bold text-base-content mb-3 inline-flex items-center gap-3">
+                    {entry.data.title}
+                    {entry.data.type === "live" && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="text-green-500"
+                      >
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                        <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
+                      </svg>
                     )}
-                    <span>{formatDate(entry.data.timestamp)}</span>
-                  </div>
+                  </h2>
+                </a>
 
-                  <p class="text-base-content/80 leading-relaxed mb-4">
-                    {entry.data.excerpt || entry.data.title}
-                  </p>
+                <div class="flex items-center gap-2 text-sm text-base-content/60 mb-4">
+                  <span>{formatDate(entry.data.timestamp)}</span>
+                  {entry.data.type === "live" && entry.data.lastUpdated && (
+                    <>
+                      <span>•</span>
+                      <span>Last updated: {formatDate(entry.data.lastUpdated)}</span>
+                    </>
+                  )}
+                </div>
 
-                  <div class="card-actions justify-end">
-                    <a href={`/blog/${entry.data.slug}`} class="btn btn-primary btn-sm">
-                      Read More
-                    </a>
-                  </div>
+                <p class="text-base-content/80 leading-relaxed mb-4">
+                  {entry.data.excerpt || entry.data.title}
+                </p>
+
+                <div class="text-right">
+                  <a
+                    href={`/blog/${entry.data.slug}`}
+                    class="link link-primary link-hover"
+                  >
+                    Read More
+                  </a>
                 </div>
               </div>
             ))
           }
         </div>
-
-        {
-          publishedPosts.length === 0 && (
-            <div class="text-center py-12">
-              <p class="text-base-content/60 text-lg">No published posts yet. Check back soon!</p>
-            </div>
-          )
-        }
       </div>
     </div>
   </AppShell>
 </Layout>
+
+<script>
+  const liveFilter = document.getElementById("live-filter") as HTMLInputElement;
+  const posts = document.querySelectorAll(".post-item");
+
+  liveFilter.addEventListener("change", () => {
+    const showLiveOnly = liveFilter.checked;
+    posts.forEach((post) => {
+      const postElement = post as HTMLElement;
+      if (showLiveOnly) {
+        if (postElement.dataset.type === "live") {
+          postElement.style.display = "block";
+        } else {
+          postElement.style.display = "none";
+        }
+      } else {
+        postElement.style.display = "block";
+      }
+    });
+  });
+</script>

@@ -1,12 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import { getTagColor } from "./util";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
-  const publishedPosts = blogEntries.filter((entry) => entry.data.status === "published");
+  const publishedPosts = blogEntries.filter(
+    (entry) => entry.data.status === "published",
+  );
 
   return publishedPosts.map((entry) => ({
     params: { slug: entry.data.slug },
@@ -19,7 +22,11 @@ type Props = {
 };
 
 const { entry }: Props = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+
+const hasToc =
+  entry.data.tableOfContents &&
+  headings.filter((h) => h.depth > 1 && h.depth < 4).length > 0;
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
@@ -36,65 +43,28 @@ const formatDate = (date: Date): string => {
 >
   <AppShell>
     <div id="blog-post" class="p-4 lg:py-18">
-      <div class="max-w-4xl mx-auto">
-        <!-- Back button -->
-        <div class="mb-8">
-          <a href="/blog" class="btn btn-ghost btn-sm"> ← Back to Blog </a>
-        </div>
-
-        <!-- Post header -->
-        <header class="mb-8">
-          <div class="flex flex-wrap gap-2 mb-6">
-            {
-              entry.data.tags.map((tag) => {
-                const { backgroundColor, textColor } = getTagColor(tag);
-                return (
-                  <a
-                    href={`/blog/tag/${tag}`}
-                    class="badge hover:scale-105 transition-transform cursor-pointer"
-                    style={`background-color: ${backgroundColor}; color: ${textColor}`}
-                  >
-                    {tag}
-                  </a>
-                );
-              })
-            }
+      <div
+        class:list={[
+          "mx-auto",
+          { "max-w-6xl flex": hasToc, "max-w-4xl": !hasToc },
+        ]}
+      >
+        <div class:list={[{ "flex-grow max-w-4xl": hasToc }]}>
+          <!-- Back button -->
+          <div class="mb-8">
+            <a href="/blog" class="btn btn-ghost btn-sm"> ← Back to Blog </a>
           </div>
 
-          <h1 class="text-4xl font-bold text-base-content mb-6 leading-tight">
-            {entry.data.title}
-          </h1>
-
-          <div class="flex items-center gap-4 text-base-content/60 mb-8">
-            {
-              entry.data.author && (
-                <>
-                  <span class="font-medium">By {entry.data.author}</span>
-                  <span>•</span>
-                </>
-              )
-            }
-            <span>{formatDate(entry.data.timestamp)}</span>
-          </div>
-        </header>
-
-        <!-- Post content -->
-        <article class="prose lg:prose-lg max-w-none prose-base-content">
-          <Content />
-        </article>
-
-        <!-- Post footer -->
-        <footer class="mt-12 pt-8 border-t border-base-300">
-          <div class="flex justify-between items-center">
-            <div class="flex flex-wrap gap-2">
-              <span class="text-base-content/60 text-sm">Tags:</span>
+          <!-- Post header -->
+          <header class="mb-8">
+            <div class="flex flex-wrap gap-2 mb-6">
               {
                 entry.data.tags.map((tag) => {
                   const { backgroundColor, textColor } = getTagColor(tag);
                   return (
                     <a
                       href={`/blog/tag/${tag}`}
-                      class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
+                      class="badge hover:scale-105 transition-transform cursor-pointer"
                       style={`background-color: ${backgroundColor}; color: ${textColor}`}
                     >
                       {tag}
@@ -103,9 +73,55 @@ const formatDate = (date: Date): string => {
                 })
               }
             </div>
-            <a href="/blog" class="btn btn-primary btn-sm"> More Posts </a>
-          </div>
-        </footer>
+
+            <h1 class="text-4xl font-bold text-base-content mb-6 leading-tight">
+              {entry.data.title}
+            </h1>
+
+            <div class="flex items-center gap-4 text-base-content/60 mb-8">
+              {
+                entry.data.author && (
+                  <>
+                    <span class="font-medium">By {entry.data.author}</span>
+                    <span>•</span>
+                  </>
+                )
+              }
+              <span>{formatDate(entry.data.timestamp)}</span>
+            </div>
+          </header>
+
+          <!-- Post content -->
+          <article class="prose lg:prose-lg max-w-none prose-base-content">
+            <Content />
+          </article>
+
+          <!-- Post footer -->
+          <footer class="mt-12 pt-8 border-t border-base-300">
+            <div class="flex justify-between items-center">
+              <div class="flex flex-wrap gap-2">
+                <span class="text-base-content/60 text-sm">Tags:</span>
+                {
+                  entry.data.tags.map((tag) => {
+                    const { backgroundColor, textColor } = getTagColor(tag);
+                    return (
+                      <a
+                        href={`/blog/tag/${tag}`}
+                        class="badge badge-sm hover:scale-105 transition-transform cursor-pointer"
+                        style={`background-color: ${backgroundColor}; color: ${textColor}`}
+                      >
+                        {tag}
+                      </a>
+                    );
+                  })
+                }
+              </div>
+              <a href="/blog" class="btn btn-primary btn-sm"> More Posts </a>
+            </div>
+          </footer>
+        </div>
+
+        {hasToc && <TableOfContents headings={headings} />}
       </div>
     </div>
   </AppShell>

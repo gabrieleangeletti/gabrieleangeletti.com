@@ -13,7 +13,7 @@ I’ve been through a few phases of the "Software Engineer vs AI” arc:
 Phase 1, the O.G., GPT3: yeah but it’s a useless stochastic parrot.
 
 Phase 2, Github Copilot: yeah but it’s fancy autocomplete, nothing more.
-  
+
 Phase 3, Cursor: yeah I’m more productive at boilerplate and stuff.
 
 **Claude Code**: yeah, I’m buying a piece of land, get some chickens. Offline I go.
@@ -116,8 +116,12 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >
 > ```json
 > {
->   "summary": { /* ActivitySummary as returned by Strava */ },
->   "detailed": { /* ActivityDetailed as returned by Strava */ },
+>   "summary": {
+>     /* ActivitySummary as returned by Strava */
+>   },
+>   "detailed": {
+>     /* ActivityDetailed as returned by Strava */
+>   },
 >   "fetched_at": {
 >     "summary": "2024-01-15T10:30:00Z",
 >     "detailed": "2024-01-15T10:31:00Z"
@@ -185,7 +189,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >  -- Then use it in your upsert
 >  DO UPDATE SET
 >      data = jsonb_deep_merge(provider_activity_raw_data.data, EXCLUDED.data)
->  ```
+> ```
 >
 > Option 3: Application-Level Merge
 >
@@ -213,7 +217,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > - Atomic operation - No race conditions
 > - Natural fit - Your structure has distinct top-level keys
 > - PostgreSQL native - Well-optimized and reliable
->  
+>
 > The || operator will preserve existing summary when you add detailed, and vice versa. What's your preference among these approaches?
 
 **Me**:
@@ -263,7 +267,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 > - Cleaner queries - Just read the field you need
 > - Efficient storage - JSONB compression works better
 > - Clear data lineage - Metadata tracks what was fetched
-> Trade-offs:
+>   Trade-offs:
 >   - ❌ Not "raw" Strava data - You lose exact API response preservation
 >   - ✅ But you gain - Storage efficiency, consistency, simplicity
 >
@@ -299,7 +303,7 @@ Anyways, back to Claude Code. I was thinking what’s the best way to get around
 >   - ActivityDetailed should be a superset of ActivitySummary
 >   - Heart rate from streams is likely more accurate than summary averages
 >   - Single source of truth - no consistency issues
-> -. Architectural Simplicity
+>     -. Architectural Simplicity
 >   - One type to store: ActivityDetailed
 >   - One conversion function: ActivityDetailed → stride.Activity
 >   - No union types, no merge logic, no redundancy

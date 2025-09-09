@@ -2,6 +2,12 @@
 import Sidebar from "./Sidebar.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import BurgerMenu from "./BurgerMenu.astro";
+
+export interface Props {
+  sidebarInitiallyOpen?: boolean;
+}
+
+const { sidebarInitiallyOpen = true } = Astro.props;
 ---
 
 <div class="bg-base-100 min-h-screen font-montserrat">
@@ -15,7 +21,7 @@ import BurgerMenu from "./BurgerMenu.astro";
   </main>
 </div>
 
-<script>
+<script define:vars={{ sidebarInitiallyOpen }}>
   const body = document.body;
   const burgerMenu = document.getElementById("burger-menu");
   const sidebar = document.getElementById("sidebar");
@@ -47,7 +53,7 @@ import BurgerMenu from "./BurgerMenu.astro";
     return sidebar?.classList.contains("translate-x-0");
   };
 
-  function setSidebarState(isOpen: boolean) {
+  function setSidebarState(isOpen) {
     if (isOpen) {
       openSidebar();
     } else {
@@ -61,8 +67,12 @@ import BurgerMenu from "./BurgerMenu.astro";
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    if (window.innerWidth >= 1024) {
-      setSidebarState(true);
+    if (sidebarInitiallyOpen) {
+      if (window.innerWidth >= 1024) {
+        setSidebarState(true);
+      } else {
+        setSidebarState(false);
+      }
     } else {
       setSidebarState(false);
     }
@@ -81,4 +91,3 @@ import BurgerMenu from "./BurgerMenu.astro";
     });
   });
 </script>
-

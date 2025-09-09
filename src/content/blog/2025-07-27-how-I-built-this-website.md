@@ -23,25 +23,24 @@ At a high-level, I wanted a _static, front-end only website_. Easy to deploy and
 
 This gave me:
 
-- Fast and easy static site generation  
-- Full design freedom  
-- A future upgrade path (e.g. switch to Next.js or similar)  
+- Fast and easy static site generation
+- Full design freedom
+- A future upgrade path (e.g. switch to Next.js or similar)
 
 But there were some drawbacks:
 
 - **SEO**. Hash-based routing is awful for SEO. You can mitigate it a bit with `#!`, but it’s still far from ideal. It’s a good pattern for simple SPAs. It just doesn’t make sense when you want good SEO and crawlable pages.
 - **Blog functionality**: I wanted the blog to be a bunch of static files (`.json`, `.md`, etc.) rendered dynamically. But I knew building this from scratch would mean diving into a rabbit hole of edge cases and plugins for rendering Markdown and beyond.
 
-
 ### Enter Astro
 
 The front-end world has a framework for anything. [Astro](https://astro.build/) felt like the perfect fit. With Astro, I can:
 
-* Ditch hash-based routing.
-* Keep the sweet static site generation.
-* Use [Content Collections](https://docs.astro.build/en/guides/content-collections/). This is exactly the blog system I needed. I can just drop in `.md` files and focus on writing.
-* Keep using React for more complex UI, and simply import the components into `.astro` components. Funnily enough, this is the first time React actually felt like a “library”.
-* Gain access to the world of Astro’s integrations and plugins.
+- Ditch hash-based routing.
+- Keep the sweet static site generation.
+- Use [Content Collections](https://docs.astro.build/en/guides/content-collections/). This is exactly the blog system I needed. I can just drop in `.md` files and focus on writing.
+- Keep using React for more complex UI, and simply import the components into `.astro` components. Funnily enough, this is the first time React actually felt like a “library”.
+- Gain access to the world of Astro’s integrations and plugins.
 
 I’ve seen people saying Astro’s not great for highly-interactive websites. People say that about a lot of frameworks. Looking at you, HTMX. Personally, I’ve never hit this magic UX threshold. Maybe if you’re building Twitch or Figma.
 

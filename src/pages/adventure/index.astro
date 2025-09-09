@@ -8,7 +8,7 @@ import data from "./_data.json";
 ---
 
 <Layout>
-  <AppShell>
+  <AppShell sidebarInitiallyOpen={false}>
     <div style="position: relative; width: 100%; height: 800px;">
       <div id="map" style="width: 100%; height: 100%;"></div>
       <AdventureMapSidebar data={data} client:load />

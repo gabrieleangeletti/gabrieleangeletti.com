@@ -1,0 +1,47 @@
+---
+import type { MarkdownHeading } from "astro";
+
+export interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter((h) => h.depth > 1 && h.depth < 4);
+---
+
+<div class="w-64 self-start sticky top-24 right-0 ml-8 hidden lg:block">
+  <h3 class="text-lg font-semibold mb-4">On this page</h3>
+  <ul class="space-y-2">
+    {filteredHeadings.map((heading) => (
+      <li class={`toc-item ml-${(heading.depth - 2) * 4}`}>
+        <a href={`#${heading.slug}`} class="text-base-content/80 hover:text-primary transition-colors">
+          {heading.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  const tocLinks = document.querySelectorAll(".toc-item a");
+  const headings = document.querySelectorAll("h2, h3");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const id = entry.target.getAttribute("id");
+      const tocLink = document.querySelector(`.toc-item a[href="#${id}"]`);
+
+      if (entry.isIntersecting) {
+        tocLinks.forEach((link) => link.classList.remove("text-primary"));
+        tocLink?.classList.add("text-primary");
+      } else {
+        tocLink?.classList.remove("text-primary");
+      }
+    });
+  }, { rootMargin: "-20% 0px -80% 0px" });
+
+  headings.forEach((heading) => {
+    observer.observe(heading);
+  });
+</script>
