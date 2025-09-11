@@ -11,6 +11,17 @@ tableOfContents: true
 tags: [software-engineering, golang]
 ---
 
+### Zero values
+
+#### omitempty vs omitzero
+
+My personal rule of thumb is:
+
+- Use `omitzero` without pointers when the zero value is meaningless in the domain. Examples: heart rate, age, time.
+- Use `omitempty` with pointers when the zero value is valid and meaningful. Example: UTC offset (zero value is UTC time zone), boolean flags (you almost never want to send `false` when not set).
+
+This mostly applies to basic types. There are some exceptions where you almost always want pointers, e.g. complex/large objects, types with expensive initialization like db connections, mutexes, etc.
+
 ### Arrays
 
 Arrays are values, not references. Assigning an array copies the whole thing. Perhaps not intuitive if coming from languages such as Java.
