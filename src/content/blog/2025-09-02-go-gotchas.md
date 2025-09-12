@@ -61,7 +61,7 @@ func (f *Foo[T]) write(key string, value T) {
   f.mu.Lock()
   defer f.mu.Unlock()
   f.data[key] = value
-} 
+}
 ```
 
 - peek pattern to polymorphically unmarshal json
@@ -102,3 +102,4 @@ var _ Foo = (*X)(nil) // asserts *X implements Foo (blank identifier assignment)
 Useful links:
 
 - [Stack or Heap? Going Deeper with Escape Analysis in Go for Better Performance](https://syntactic-sugar.dev/blog/nested-route/go-escape-analysis) (May 2024)
+- [Logging in Go with Slog: A Practitioner's Guide](https://www.dash0.com/guides/logging-in-go-with-slog) (July 2025)
