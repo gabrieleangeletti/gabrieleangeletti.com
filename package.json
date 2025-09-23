@@ -15,7 +15,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.15.1",
   "devDependencies": {
-    "@astrojs/react": "^4.3.0",
+    "@astrojs/react": "^4.3.1",
     "@cloudflare/vite-plugin": "^1.7.5",
     "@tailwindcss/typography": "^0.5.16",
     "@types/react": "^19.1.8",
@@ -23,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
     "@vitejs/plugin-react": "^4.5.2",
-    "astro": "^5.13.2",
+    "astro": "^5.13.10",
     "daisyui": "^5.0.43",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.3.4",
-    "@astrojs/sitemap": "^3.5.0",
+    "@astrojs/mdx": "^4.3.6",
+    "@astrojs/sitemap": "^3.6.0",
     "@astrojs/ts-plugin": "^1.10.4",
     "@googlemaps/polyline-codec": "^1.0.28",
     "@tailwindcss/vite": "^4.1.10",
