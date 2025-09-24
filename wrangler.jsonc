@@ -1,7 +1,14 @@
 {
-  "name": "gabrieleangeletti",
-  "compatibility_date": "2025-07-01",
+  "name": "gabrieleangeletti-com",
+  "compatibility_date": "2025-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./dist/_worker.js/index.js",
+  "preview_urls": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+  },
   "observability": {
-    "enabled": false,
+    "enabled": true,
   },
 }

@@ -21,7 +21,7 @@ const { sidebarInitiallyOpen = true } = Astro.props;
   </main>
 </div>
 
-<script define:vars={{ sidebarInitiallyOpen }}>
+<script is:inline define:vars={{ sidebarInitiallyOpen }}>
   const body = document.body;
   const burgerMenu = document.getElementById("burger-menu");
   const sidebar = document.getElementById("sidebar");
