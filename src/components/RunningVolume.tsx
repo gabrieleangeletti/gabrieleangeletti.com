@@ -3,7 +3,9 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useQuery } from "@tanstack/react-query";
 import RunningVolumeChart, { type RunningVolumePoint } from "./RunningVolumeChart";
 import RunningVolumeForecast from "./RunningVolumeForecast";
+import CrossTrainingVolume from "./CrossTrainingVolume";
 import { client, vo2Get } from "../utils/api";
+import { formatWeek } from "../utils/formatWeek";
 
 interface RunningVolumeData {
   data: {
@@ -27,6 +29,8 @@ interface RunningVolumeProps {
   showHeading?: boolean;
 }
 
+const crossTrainingSports = ["elliptical", "cycling"];
+
 const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
   const { data, isPending, isError, error } = useQuery(
     {
@@ -40,7 +44,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
         const { data, error } = await vo2Get(`athletes/${userId}/metrics/volume`, {
           provider: "strava",
           frequency: "week",
-          sport: ["running", "elliptical"],
+          sport: ["running", ...crossTrainingSports],
           startDate: threeMonthsAgo.toString(),
         });
         if (error) {
@@ -104,6 +108,10 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
   return (
     <div className="w-full space-y-6">
       <RunningVolumeChart data={chartData} showHeading={showHeading} />
+      <CrossTrainingVolume
+        volumeBySport={data?.data}
+        referenceWeeks={chartData.map(({ week, weekStartISO }) => ({ week, weekStartISO }))}
+      />
       {mostRecentWeek && (
         <RunningVolumeForecast
           baselineDistanceKm={mostRecentWeek.distanceKm}
@@ -115,26 +123,3 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
 };
 
 export default RunningVolume;
-
-const formatWeek = (period: string): [string, string] => {
-  try {
-    const [yearPart, weekPart] = period.split("-W");
-    if (!yearPart || !weekPart) {
-      throw new Error("unexpected period format");
-    }
-
-    const year = Number(yearPart);
-    const weekOfYear = Number(weekPart);
-
-    const startOfWeek = Temporal.PlainDate.from({ year, weekOfYear, dayOfWeek: 1 });
-    const formatted = startOfWeek.toLocaleString("en", {
-      month: "short",
-      day: "numeric",
-    });
-
-    return [formatted, startOfWeek.toString()];
-  } catch {
-    const today = Temporal.Now.plainDateISO();
-    return [period, today.toString()];
-  }
-};
