@@ -94,17 +94,37 @@ const RunningVolumeForecast = ({
   );
 
   const renderDot = (dotProps: DotProps) => {
-    const payload = dotProps.payload as ForecastPoint | undefined;
+    const payload = (dotProps as DotProps & { payload: ForecastPoint }).payload as
+      | ForecastPoint
+      | undefined;
 
     if (typeof dotProps.cx !== "number" || typeof dotProps.cy !== "number") {
       return null;
     }
 
     if (payload?.isRestWeek) {
-      return <circle cx={dotProps.cx} cy={dotProps.cy} r={5} fill="#f97316" stroke="#f97316" />;
+      return (
+        <circle
+          key={dotProps.key}
+          cx={dotProps.cx}
+          cy={dotProps.cy}
+          r={5}
+          fill="#f97316"
+          stroke="#f97316"
+        />
+      );
     }
 
-    return <circle cx={dotProps.cx} cy={dotProps.cy} r={4} stroke="#2563eb" fill="#2563eb" />;
+    return (
+      <circle
+        key={dotProps.key}
+        cx={dotProps.cx}
+        cy={dotProps.cy}
+        r={4}
+        stroke="#2563eb"
+        fill="#2563eb"
+      />
+    );
   };
 
   return (

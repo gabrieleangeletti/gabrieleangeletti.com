@@ -18,14 +18,18 @@ export interface ApiResponse<T> {
  */
 export async function vo2Get<T>(
   endpoint: string,
-  searchParams?: Record<string, string>,
+  searchParams?: Record<string, string | string[]>,
 ): Promise<ApiResponse<T>> {
   try {
     const url = new URL(`${API_BASE}/${endpoint}`, window.location.origin);
 
     if (searchParams) {
       Object.entries(searchParams).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
+        if (Array.isArray(value)) {
+          value.forEach((val) => url.searchParams.append(key, val));
+        } else {
+          url.searchParams.append(key, value);
+        }
       });
     }
 

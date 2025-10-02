@@ -7,16 +7,18 @@ import { client, vo2Get } from "../utils/api";
 
 interface RunningVolumeData {
   data: {
-    period: string;
-    activityCount: number;
-    totalDistanceMeters: number;
-    totalElapsedTimeSeconds: number;
-    totalMovingTimeSeconds: number;
-    totalElevationGainMeters: number;
-  }[];
+    [sport: string]: {
+      period: string;
+      activityCount: number;
+      totalDistanceMeters: number;
+      totalElapsedTimeSeconds: number;
+      totalMovingTimeSeconds: number;
+      totalElevationGainMeters: number;
+    }[];
+  };
   frequency: string;
   provider: string;
-  sport: string;
+  sports: string[];
   startDate: string;
   userId: string;
 }
@@ -38,7 +40,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
         const { data, error } = await vo2Get(`athletes/${userId}/metrics/volume`, {
           provider: "strava",
           frequency: "week",
-          sport: "running",
+          sport: ["running", "elliptical"],
           startDate: threeMonthsAgo.toString(),
         });
         if (error) {
@@ -57,7 +59,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
       return [];
     }
 
-    return data.data
+    return data.data["running"]
       .map((entry) => {
         const [weekLabel, weekStartISO] = formatWeek(entry.period);
         return {
