@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
 import RunningVolume from "../../components/RunningVolume";
+import RunningEvents from "../../components/RunningEvents";
 
 interface FitnessCard {
   title: string;
@@ -61,7 +62,7 @@ const knowledgeSections = ["Injury", "Training", "Recovery", "Health"].map((cate
                 </span>
                 <h2 class="text-3xl font-bold text-base-content">Performance workbook</h2>
               </header>
-              <div class="grid gap-6 lg:grid-cols-1">
+              <div class="grid gap-6">
                 <article class="relative overflow-hidden rounded-3xl border border-sky-500/10 bg-base-100/80 p-6 shadow-lg">
                   <div
                     class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_60%)]"
@@ -75,6 +76,21 @@ const knowledgeSections = ["Injury", "Training", "Recovery", "Health"].map((cate
                       </p>
                     </div>
                     <RunningVolume client:load showHeading={false} />
+                  </div>
+                </article>
+                <article class="relative overflow-hidden rounded-3xl border border-sky-500/10 bg-base-100/80 p-6 shadow-lg">
+                  <div
+                    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.12),transparent_55%)]"
+                    aria-hidden="true"
+                  />
+                  <div class="relative flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                      <h3 class="text-2xl font-semibold text-base-content">Upcoming events</h3>
+                      <p class="text-sm text-base-content/60">
+                        Race calendar with a countdown to stay ahead of training blocks.
+                      </p>
+                    </div>
+                    <RunningEvents client:load />
                   </div>
                 </article>
               </div>
