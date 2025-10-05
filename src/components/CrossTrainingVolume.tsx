@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import useChartTheme from "../hooks/useChartTheme";
-import { formatWeek } from "../utils/formatWeek";
+import { formatHoursMinutes, formatWeek } from "../utils/format";
 
 const crossTrainingSports = ["elliptical", "cycling"] as const;
 
@@ -88,21 +88,6 @@ interface CrossTrainingVolumeProps {
 const secondsToHours = (seconds: number) => seconds / 3600;
 const metersToKilometers = (meters: number) => Math.round((meters / 1000) * 10) / 10;
 const formatHoursLabel = (hours: number) => `${hours.toFixed(1)} h`;
-const formatHoursMinutes = (hours: number) => {
-  const totalMinutes = Math.round(hours * 60);
-  const wholeHours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (wholeHours === 0) {
-    return `${minutes} min`;
-  }
-
-  if (minutes === 0) {
-    return `${wholeHours} h`;
-  }
-
-  return `${wholeHours} h ${minutes} min`;
-};
 
 const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTrainingVolumeProps) => {
   const theme = useChartTheme();

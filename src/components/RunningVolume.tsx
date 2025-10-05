@@ -5,7 +5,7 @@ import RunningVolumeChart, { type RunningVolumePoint } from "./RunningVolumeChar
 import RunningVolumeForecast from "./RunningVolumeForecast";
 import CrossTrainingVolume from "./CrossTrainingVolume";
 import { client, vo2Get } from "../utils/api";
-import { formatWeek } from "../utils/formatWeek";
+import { formatWeek } from "../utils/format";
 
 interface RunningVolumeData {
   data: {
@@ -70,14 +70,25 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           return {
             week: weekLabel,
             weekStartISO,
+            timeSeconds: entry.totalMovingTimeSeconds,
             distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
             elevationM: Math.round(entry.totalElevationGainMeters),
+            previousWeekTimeChange: 0,
             previousWeekDistanceChange: 0,
             previousWeekElevationChange: 0,
           };
         }
 
         const previousWeek = data.data["running"][index - 1];
+
+        const previousWeekTimeSeconds = previousWeek ? previousWeek.totalElapsedTimeSeconds : 0;
+        const previousWeekTimeChange =
+          previousWeekTimeSeconds === 0
+            ? Infinity
+            : ((entry.totalElapsedTimeSeconds - previousWeekTimeSeconds) /
+                previousWeekTimeSeconds) *
+              100;
+
         const previousWeekDistanceMeters = previousWeek ? previousWeek.totalDistanceMeters : 0;
         const previousWeekDistanceChange =
           previousWeekDistanceMeters === 0
@@ -99,8 +110,10 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
         return {
           week: weekLabel,
           weekStartISO,
+          timeSeconds: entry.totalElapsedTimeSeconds,
           distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
           elevationM: Math.round(entry.totalElevationGainMeters),
+          previousWeekTimeChange: previousWeekTimeChange,
           previousWeekDistanceChange: previousWeekDistanceChange,
           previousWeekElevationChange: previousWeekElevationChange,
         };

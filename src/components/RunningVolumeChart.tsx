@@ -7,10 +7,12 @@ import {
   Line,
   ResponsiveContainer,
   Tooltip,
+  type TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
 import useChartTheme from "../hooks/useChartTheme";
+import { formatHoursMinutes } from "../utils/format";
 
 interface RunningVolumeChartProps {
   data: RunningVolumePoint[];
@@ -20,11 +22,83 @@ interface RunningVolumeChartProps {
 export interface RunningVolumePoint {
   week: string;
   weekStartISO: string;
+  timeSeconds: number;
   distanceKm: number;
   elevationM: number;
+  previousWeekTimeChange: number;
   previousWeekDistanceChange: number;
   previousWeekElevationChange: number;
 }
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  const theme = useChartTheme();
+
+  if (!active || !payload || !payload.length) {
+    return null;
+  }
+
+  const dataPoint = payload[0].payload as RunningVolumePoint;
+
+  const getFormattedDistancePrevWeek = () => {
+    const change = dataPoint.previousWeekDistanceChange;
+    const sign = change >= 0 ? "+" : "";
+    const formattedChange =
+      change !== Infinity ? `(${sign}${change.toFixed(1)}% vs. prev week)` : "";
+
+    return formattedChange;
+  };
+
+  const getFormattedElevationPrevWeek = () => {
+    const change = dataPoint.previousWeekElevationChange;
+    const sign = change >= 0 ? "+" : "";
+    const formattedChange =
+      change !== Infinity ? `(${sign}${change.toFixed(1)}% vs. prev week)` : "";
+
+    return formattedChange;
+  };
+
+  const getFormattedTimePrevWeek = () => {
+    const change = dataPoint.previousWeekTimeChange;
+    const sign = change >= 0 ? "+" : "";
+    const formattedChange =
+      change !== Infinity ? `(${sign}${change.toFixed(1)}% vs. prev week)` : "";
+
+    return formattedChange;
+  };
+
+  return (
+    <div
+      style={{
+        borderRadius: 12,
+        backgroundColor: theme.tooltipBackground,
+        border: `1px solid ${theme.tooltipBorder}`,
+        padding: "12px",
+        fontSize: "0.875rem",
+        color: "black",
+      }}
+    >
+      <p style={{ marginBottom: "8px", fontWeight: 600 }}>Week of {label}</p>
+
+      <p style={{ margin: "4px 0" }}>
+        <span style={{ color: payload.find((item) => item.dataKey === "distanceKm").color }}>
+          Distance: {dataPoint.distanceKm.toFixed(1)} km {getFormattedDistancePrevWeek()}
+        </span>
+      </p>
+
+      <p style={{ margin: "4px 0" }}>
+        <span style={{ color: payload.find((item) => item.dataKey === "elevationM").color }}>
+          Elevation: {dataPoint.elevationM.toFixed(1)} m {getFormattedElevationPrevWeek()}
+        </span>
+      </p>
+
+      <p style={{ margin: "4px 0" }}>
+        <span style={{ color: "black" }}>
+          Time: {formatHoursMinutes(dataPoint.timeSeconds / 3600)} {getFormattedTimePrevWeek()}
+        </span>
+      </p>
+    </div>
+  );
+};
 
 const RunningVolumeChart = ({ data, showHeading = true }: RunningVolumeChartProps) => {
   const theme = useChartTheme();
@@ -60,52 +134,7 @@ const RunningVolumeChart = ({ data, showHeading = true }: RunningVolumeChartProp
               tick={{ fill: theme.axisColor, fontSize: 12 }}
               width={60}
             />
-            <Tooltip
-              cursor={{ fill: "rgba(59, 130, 246, 0.08)" }}
-              contentStyle={{
-                borderRadius: 12,
-                backgroundColor: theme.tooltipBackground,
-                borderColor: theme.tooltipBorder,
-                fontSize: "0.875rem",
-                color: "black",
-              }}
-              labelStyle={{ color: "black" }}
-              formatter={(value: number | string, name, props) => {
-                if (name === "distanceKm") {
-                  const numericValue = typeof value === "number" ? value : Number(value);
-
-                  const dataPoint = props.payload as RunningVolumePoint;
-                  const change = dataPoint.previousWeekDistanceChange;
-                  const sign = change >= 0 ? "+" : "";
-                  let formattedChange = "";
-                  if (change !== Infinity) {
-                    formattedChange = `(${sign}${change.toFixed(1)}% vs. prev week)`;
-                  }
-
-                  return [`${numericValue.toFixed(1)} km ${formattedChange}`, "Distance"];
-                }
-
-                if (name === "elevationM") {
-                  const numericValue = typeof value === "number" ? value : Number(value);
-
-                  const dataPoint = props.payload as RunningVolumePoint;
-                  const change = dataPoint.previousWeekElevationChange;
-                  const sign = change >= 0 ? "+" : "";
-                  let formattedChange = "";
-                  if (change !== Infinity) {
-                    formattedChange = `(${sign}${change.toFixed(1)}% vs. prev week)`;
-                  }
-
-                  return [
-                    `${numericValue.toLocaleString()} m ${formattedChange}`,
-                    "Elevation gain",
-                  ];
-                }
-
-                return [value, name];
-              }}
-              labelFormatter={(label) => `Week of ${label}`}
-            />
+            <Tooltip cursor={{ fill: "rgba(59, 130, 246, 0.08)" }} content={CustomTooltip} />
             <Legend
               wrapperStyle={{ color: theme.axisColor, fontSize: "0.75rem" }}
               formatter={(value) => (value === "distanceKm" ? "Distance" : "Elevation gain")}
