@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import useChartTheme from "../hooks/useChartTheme";
+
 interface RunningVolumeChartProps {
   data: RunningVolumePoint[];
   showHeading?: boolean;
@@ -21,6 +22,8 @@ export interface RunningVolumePoint {
   weekStartISO: string;
   distanceKm: number;
   elevationM: number;
+  previousWeekDistanceChange: number;
+  previousWeekElevationChange: number;
 }
 
 const RunningVolumeChart = ({ data, showHeading = true }: RunningVolumeChartProps) => {
@@ -67,15 +70,38 @@ const RunningVolumeChart = ({ data, showHeading = true }: RunningVolumeChartProp
                 color: "black",
               }}
               labelStyle={{ color: "black" }}
-              formatter={(value: number | string, name) => {
+              formatter={(value: number | string, name, props) => {
                 if (name === "distanceKm") {
                   const numericValue = typeof value === "number" ? value : Number(value);
-                  return [`${numericValue.toFixed(1)} km`, "Distance"];
+
+                  const dataPoint = props.payload as RunningVolumePoint;
+                  const change = dataPoint.previousWeekDistanceChange;
+                  const sign = change >= 0 ? "+" : "";
+                  let formattedChange = "";
+                  if (change !== Infinity) {
+                    formattedChange = `(${sign}${change.toFixed(1)}% vs. prev week)`;
+                  }
+
+                  return [`${numericValue.toFixed(1)} km ${formattedChange}`, "Distance"];
                 }
+
                 if (name === "elevationM") {
                   const numericValue = typeof value === "number" ? value : Number(value);
-                  return [`${numericValue.toLocaleString()} m`, "Elevation gain"];
+
+                  const dataPoint = props.payload as RunningVolumePoint;
+                  const change = dataPoint.previousWeekElevationChange;
+                  const sign = change >= 0 ? "+" : "";
+                  let formattedChange = "";
+                  if (change !== Infinity) {
+                    formattedChange = `(${sign}${change.toFixed(1)}% vs. prev week)`;
+                  }
+
+                  return [
+                    `${numericValue.toLocaleString()} m ${formattedChange}`,
+                    "Elevation gain",
+                  ];
                 }
+
                 return [value, name];
               }}
               labelFormatter={(label) => `Week of ${label}`}

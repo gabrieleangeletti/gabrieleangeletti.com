@@ -64,14 +64,46 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
     }
 
     return data.data["running"]
-      .map((entry) => {
+      .map((entry, index) => {
         const [weekLabel, weekStartISO] = formatWeek(entry.period);
+        if (index === 0) {
+          return {
+            week: weekLabel,
+            weekStartISO,
+            distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
+            elevationM: Math.round(entry.totalElevationGainMeters),
+            previousWeekDistanceChange: 0,
+            previousWeekElevationChange: 0,
+          };
+        }
+
+        const previousWeek = data.data["running"][index - 1];
+        const previousWeekDistanceMeters = previousWeek ? previousWeek.totalDistanceMeters : 0;
+        const previousWeekDistanceChange =
+          previousWeekDistanceMeters === 0
+            ? Infinity
+            : ((entry.totalDistanceMeters - previousWeekDistanceMeters) /
+                previousWeekDistanceMeters) *
+              100;
+
+        const previousWeekElevationMeters = previousWeek
+          ? previousWeek.totalElevationGainMeters
+          : 0;
+        const previousWeekElevationChange =
+          previousWeekElevationMeters === 0
+            ? Infinity
+            : ((entry.totalElevationGainMeters - previousWeekElevationMeters) /
+                previousWeekElevationMeters) *
+              100;
+
         return {
           week: weekLabel,
           weekStartISO,
           distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
           elevationM: Math.round(entry.totalElevationGainMeters),
-        } satisfies RunningVolumePoint;
+          previousWeekDistanceChange: previousWeekDistanceChange,
+          previousWeekElevationChange: previousWeekElevationChange,
+        };
       })
       .sort((a, b) => a.weekStartISO.localeCompare(b.weekStartISO));
   }, [data]);
