@@ -36,12 +36,12 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
     {
       queryKey: ["running-volume"],
       queryFn: async () => {
-        const userId = "c263ed11-624f-43c8-a217-666ae8427dbb";
+        const athleteId = "7e9ce9cd-46df-4a79-a086-4ec357ed1724";
 
         const now = Temporal.Now.plainDateISO();
         const threeMonthsAgo = now.subtract({ months: 3 });
 
-        const { data, error } = await vo2Get(`athletes/${userId}/metrics/volume`, {
+        const { data, error } = await vo2Get(`athletes/${athleteId}/metrics/volume`, {
           provider: "strava",
           frequency: "week",
           sport: ["running", ...crossTrainingSports],
