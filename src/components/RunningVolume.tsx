@@ -44,7 +44,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
         const { data, error } = await vo2Get(`athletes/${athleteId}/metrics/volume`, {
           provider: "strava",
           frequency: "week",
-          sport: ["running", ...crossTrainingSports],
+          sport: ["running", "trail-running", ...crossTrainingSports],
           startDate: threeMonthsAgo.toString(),
         });
         if (error) {
@@ -63,7 +63,33 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
       return [];
     }
 
-    return data.data["running"]
+    const runningData = data.data["running"] || [];
+    const trailRunningData = data.data["trail-running"] || [];
+
+    const mergedByPeriod = new Map<string, typeof runningData[0]>();
+
+    for (const entry of runningData) {
+      mergedByPeriod.set(entry.period, { ...entry });
+    }
+
+    for (const entry of trailRunningData) {
+      const existing = mergedByPeriod.get(entry.period);
+      if (existing) {
+        existing.activityCount += entry.activityCount;
+        existing.totalDistanceMeters += entry.totalDistanceMeters;
+        existing.totalElapsedTimeSeconds += entry.totalElapsedTimeSeconds;
+        existing.totalMovingTimeSeconds += entry.totalMovingTimeSeconds;
+        existing.totalElevationGainMeters += entry.totalElevationGainMeters;
+      } else {
+        mergedByPeriod.set(entry.period, { ...entry });
+      }
+    }
+
+    const mergedData = Array.from(mergedByPeriod.values()).sort((a, b) =>
+      a.period.localeCompare(b.period)
+    );
+
+    return mergedData
       .map((entry, index) => {
         const [weekLabel, weekStartISO] = formatWeek(entry.period);
         if (index === 0) {
@@ -79,23 +105,23 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           };
         }
 
-        const previousWeek = data.data["running"][index - 1];
+        const previousWeek = mergedData[index - 1];
 
         const previousWeekTimeSeconds = previousWeek ? previousWeek.totalElapsedTimeSeconds : 0;
         const previousWeekTimeChange =
           previousWeekTimeSeconds === 0
             ? Infinity
             : ((entry.totalElapsedTimeSeconds - previousWeekTimeSeconds) /
-                previousWeekTimeSeconds) *
-              100;
+              previousWeekTimeSeconds) *
+            100;
 
         const previousWeekDistanceMeters = previousWeek ? previousWeek.totalDistanceMeters : 0;
         const previousWeekDistanceChange =
           previousWeekDistanceMeters === 0
             ? Infinity
             : ((entry.totalDistanceMeters - previousWeekDistanceMeters) /
-                previousWeekDistanceMeters) *
-              100;
+              previousWeekDistanceMeters) *
+            100;
 
         const previousWeekElevationMeters = previousWeek
           ? previousWeek.totalElevationGainMeters
@@ -104,8 +130,8 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           previousWeekElevationMeters === 0
             ? Infinity
             : ((entry.totalElevationGainMeters - previousWeekElevationMeters) /
-                previousWeekElevationMeters) *
-              100;
+              previousWeekElevationMeters) *
+            100;
 
         return {
           week: weekLabel,
