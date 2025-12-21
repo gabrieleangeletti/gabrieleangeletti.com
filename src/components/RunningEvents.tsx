@@ -7,7 +7,7 @@ interface RunningEvent {
   name: string;
   dateISO: `${number}-${number}-${number}`;
   type: EventType;
-  image: string;
+  image: string | null;
   url: string;
   location: string;
   distanceKm: number;
@@ -24,7 +24,29 @@ interface EnrichedEvent extends RunningEvent {
 
 const upcomingEvents: RunningEvent[] = [
   {
-    id: "utmb-val-daran-2025",
+    id: "linhas-de-torres-100-2026",
+    name: "Linhas de Torres 100",
+    dateISO: "2026-01-31",
+    type: "race",
+    image: null,
+    url: "https://www.linhasdetorres100.com/home-en#events",
+    location: "Torres Vedras, Portugal",
+    distanceKm: 30,
+    elevationGainM: 900,
+  },
+  {
+    id: "utmb-oh-meus-deus-2026",
+    name: "Oh Meus Deus by UTMB",
+    dateISO: "2026-05-01",
+    type: "race",
+    image: "/images/events/utmb-world-series.png",
+    url: "https://ohmeudeus.utmb.world/pt/races/omd50k",
+    location: "Loriga, Portugal",
+    distanceKm: 50,
+    elevationGainM: 2800,
+  },
+  {
+    id: "utmb-val-daran-2026",
     name: "Hoka Val d'Aran by UTMB",
     dateISO: "2026-07-03",
     type: "race",
@@ -105,12 +127,18 @@ const RunningEvents = () => {
           className="flex items-center gap-4 rounded-2xl border border-sky-500/10 bg-base-100/70 p-4 shadow-lg shadow-sky-500/10 backdrop-blur-sm"
         >
           <div className="h-20 w-20 overflow-hidden rounded-2xl border border-base-content/10">
-            <img
-              src={event.image}
-              alt={`${event.name} cover art`}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
+            {event.image ? (
+              <img
+                src={event.image}
+                alt={`${event.name} cover art`}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-base-content/5 text-2xl font-semibold text-base-content/40">
+                {event.name.charAt(0)}
+              </div>
+            )}
           </div>
           <div className="flex flex-1 flex-col gap-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
