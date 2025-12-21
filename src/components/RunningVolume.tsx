@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Temporal } from "@js-temporal/polyfill";
 import { useQuery } from "@tanstack/react-query";
 import RunningVolumeChart, { type RunningVolumePoint } from "./RunningVolumeChart";
@@ -32,20 +32,22 @@ interface RunningVolumeProps {
 const crossTrainingSports = ["elliptical", "cycling"];
 
 const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
+  const [monthsBack, setMonthsBack] = useState(3);
+
   const { data, isPending, isError, error } = useQuery(
     {
-      queryKey: ["running-volume"],
+      queryKey: ["running-volume", monthsBack],
       queryFn: async () => {
         const athleteId = "7e9ce9cd-46df-4a79-a086-4ec357ed1724";
 
         const now = Temporal.Now.plainDateISO();
-        const threeMonthsAgo = now.subtract({ months: 3 });
+        const startDate = now.subtract({ months: monthsBack });
 
         const { data, error } = await vo2Get(`athletes/${athleteId}/metrics/volume`, {
           provider: "strava",
           frequency: "week",
           sport: ["running", "trail-running", ...crossTrainingSports],
-          startDate: threeMonthsAgo.toString(),
+          startDate: startDate.toString(),
         });
         if (error) {
           throw new Error(error);
@@ -178,6 +180,19 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
 
   return (
     <div className="w-full space-y-6">
+      <div className="flex items-center justify-between gap-4">
+        <select
+          value={monthsBack}
+          onChange={(e) => setMonthsBack(Number(e.target.value))}
+          className="select select-bordered select-sm w-auto min-w-[140px]"
+          aria-label="Select date range"
+        >
+          <option value={1}>Last month</option>
+          <option value={3}>Last 3 months</option>
+          <option value={6}>Last 6 months</option>
+          <option value={12}>Last year</option>
+        </select>
+      </div>
       <RunningVolumeChart data={chartData} showHeading={showHeading} />
       <CrossTrainingVolume
         volumeBySport={data?.data}
