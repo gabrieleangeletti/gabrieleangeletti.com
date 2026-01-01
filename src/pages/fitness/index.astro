@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import AppShell from "../../components/AppShell.astro";
 import RunningVolume from "../../components/RunningVolume";
 import RunningEvents from "../../components/RunningEvents";
+import RunningYTDStats from "../../components/RunningYTDStats";
 
 interface FitnessCard {
   title: string;
@@ -69,6 +70,11 @@ const knowledgeSections = ["Injury", "Training", "Recovery", "Health"].map((cate
                     aria-hidden="true"
                   />
                   <div class="relative flex flex-col gap-4">
+                    <div class="mt-2 mb-2">
+                       <RunningYTDStats client:load />
+                    </div>
+                    <div class="divider my-0 opacity-50"></div>
+
                     <div class="flex flex-col gap-1">
                       <h3 class="text-2xl font-semibold text-base-content">Weekly volume</h3>
                       <p class="text-sm text-base-content/60">
