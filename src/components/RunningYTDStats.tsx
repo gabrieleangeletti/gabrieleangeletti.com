@@ -31,7 +31,6 @@ const RunningYTDStats = () => {
         client
     );
 
-    // Formatters
     const formatDistance = (meters: number) => {
         const km = meters / 1000;
         return new Intl.NumberFormat("en-US", {
@@ -44,15 +43,18 @@ const RunningYTDStats = () => {
         return new Intl.NumberFormat("en-US").format(meters);
     };
 
-    const formatDuration = (seconds: number) => {
-        const hours = Math.floor(seconds / 3600);
-        return new Intl.NumberFormat("en-US").format(hours);
+    const getDurationUnits = (seconds: number) => {
+        return {
+            hours: Math.floor(seconds / 3600),
+            minutes: Math.floor((seconds % 3600) / 60)
+        };
     };
 
     if (isError) return null;
 
     const volume = data?.volume;
     const currentYear = new Date().getFullYear();
+    const { hours, minutes } = getDurationUnits(volume?.totalMovingTimeSeconds || 0);
 
     return (
         <div className="w-full">
@@ -111,11 +113,15 @@ const RunningYTDStats = () => {
                     {isPending ? (
                         <div className="h-8 w-24 bg-base-content/10 animate-pulse rounded" />
                     ) : (
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-base-content tracking-tight">
-                                {formatDuration(volume?.totalMovingTimeSeconds || 0)}
-                            </span>
-                            <span className="text-sm font-medium text-base-content/60">hrs</span>
+                        <div className="flex items-baseline gap-2">
+                            <div>
+                                <span className="text-3xl font-black text-base-content">{hours}</span>
+                                <span className="text-sm font-medium text-base-content/60 ml-1">h</span>
+                            </div>
+                            <div>
+                                <span className="text-3xl font-black text-base-content">{minutes}</span>
+                                <span className="text-sm font-medium text-base-content/60 ml-1">m</span>
+                            </div>
                         </div>
                     )}
                 </div>
