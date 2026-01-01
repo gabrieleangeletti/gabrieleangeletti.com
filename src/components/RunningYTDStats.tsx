@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Activity, Clock, Mountain } from "lucide-react";
+import { TbActivity, TbClock, TbMountain } from "react-icons/tb";
 import { client, vo2Get } from "../utils/api";
 
 interface AthleteTotalRunningVolume {
@@ -18,7 +18,6 @@ const RunningYTDStats = () => {
         {
             queryKey: ["running-ytd"],
             queryFn: async () => {
-                // Using the same hardcoded ID as seen in your RunningVolume component
                 const athleteId = "7e9ce9cd-46df-4a79-a086-4ec357ed1724";
                 const { data, error } = await vo2Get(
                     `athletes/${athleteId}/metrics/running-ytd-volume`
@@ -49,7 +48,7 @@ const RunningYTDStats = () => {
         return new Intl.NumberFormat("en-US").format(hours);
     };
 
-    if (isError) return null; // Fail silently to not break the layout, or render a small retry button
+    if (isError) return null;
 
     const volume = data?.volume;
     const currentYear = new Date().getFullYear();
@@ -63,10 +62,9 @@ const RunningYTDStats = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-4 divide-x divide-base-content/10">
-                {/* Distance */}
                 <div className="flex flex-col gap-1 pr-4">
                     <div className="flex items-center gap-2 text-sky-500 mb-1">
-                        <Activity className="size-4" />
+                        <TbActivity className="size-4" />
                         <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
                             Distance
                         </span>
@@ -83,10 +81,9 @@ const RunningYTDStats = () => {
                     )}
                 </div>
 
-                {/* Elevation */}
                 <div className="flex flex-col gap-1 px-4">
                     <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                        <Mountain className="size-4" />
+                        <TbMountain className="size-4" />
                         <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
                             Elevation
                         </span>
@@ -103,10 +100,9 @@ const RunningYTDStats = () => {
                     )}
                 </div>
 
-                {/* Time */}
                 <div className="flex flex-col gap-1 pl-4">
                     <div className="flex items-center gap-2 text-orange-400 mb-1">
-                        <Clock className="size-4" />
+                        <TbClock className="size-4" />
                         <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
                             Time
                         </span>
