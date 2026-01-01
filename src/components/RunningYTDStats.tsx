@@ -20,8 +20,9 @@ const RunningYTDStats = () => {
             queryFn: async () => {
                 const athleteId = "7e9ce9cd-46df-4a79-a086-4ec357ed1724";
                 const { data, error } = await vo2Get(
-                    `athletes/${athleteId}/metrics/running-ytd-volume`
-                );
+                    `athletes/${athleteId}/metrics/running-ytd-volume`, {
+                    provider: "strava",
+                });
                 if (error) throw new Error(error);
                 return data as YTDResponse;
             },
