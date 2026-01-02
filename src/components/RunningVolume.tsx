@@ -29,7 +29,7 @@ interface RunningVolumeProps {
   showHeading?: boolean;
 }
 
-const crossTrainingSports = ["elliptical", "cycling"];
+const crossTrainingSports = ["elliptical", "cycling", "hiking"];
 
 const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
   const [monthsBack, setMonthsBack] = useState(3);
@@ -179,7 +179,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
   const mostRecentWeek = chartData.at(-1);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <select
           value={monthsBack}

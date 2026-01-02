@@ -14,18 +14,20 @@ import {
 import useChartTheme from "../hooks/useChartTheme";
 import { formatHoursMinutes, formatWeek } from "../utils/format";
 
-const crossTrainingSports = ["elliptical", "cycling"] as const;
+const crossTrainingSports = ["elliptical", "cycling", "hiking"] as const;
 
 type CrossTrainingSport = (typeof crossTrainingSports)[number];
 
 const sportLabels: Record<CrossTrainingSport, string> = {
   elliptical: "Elliptical",
   cycling: "Cycling",
+  hiking: "Hiking",
 };
 
 const sportColors: Record<CrossTrainingSport, string> = {
   elliptical: "#14b8a6",
   cycling: "#6366f1",
+  hiking: "#f59e0b",
 };
 
 type VolumeEntry = {
@@ -75,9 +77,19 @@ type CyclingPoint = {
   activityCount: number;
 };
 
+type HikingPoint = {
+  week: string;
+  weekStartISO: string;
+  movingHours: number;
+  distanceKm: number;
+  elevationM: number;
+  activityCount: number;
+};
+
 interface PerSportSeries {
   elliptical: EllipticalPoint[];
   cycling: CyclingPoint[];
+  hiking: HikingPoint[];
 }
 
 interface CrossTrainingVolumeProps {
@@ -102,6 +114,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
         perSportSeries: {
           elliptical: [],
           cycling: [],
+          hiking: [],
         },
       };
     }
@@ -133,6 +146,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
         totals: {
           elliptical: emptyTotals(),
           cycling: emptyTotals(),
+          hiking: emptyTotals(),
         },
       });
     };
@@ -169,7 +183,8 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
     const overallSeries = sortedWeeks.map<OverviewPoint>((weekData) => {
       const ellipticalHours = secondsToHours(weekData.totals.elliptical.movingSeconds);
       const cyclingHours = secondsToHours(weekData.totals.cycling.movingSeconds);
-      const totalHours = ellipticalHours + cyclingHours;
+      const hikingHours = secondsToHours(weekData.totals.hiking.movingSeconds);
+      const totalHours = ellipticalHours + cyclingHours + hikingHours;
 
       return {
         week: weekData.week,
@@ -177,6 +192,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
         totalHours,
         ellipticalHours,
         cyclingHours,
+        hikingHours,
       };
     });
     const ellipticalSeries = sortedWeeks.map<EllipticalPoint>((weekData) => ({
@@ -195,11 +211,21 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
       activityCount: weekData.totals.cycling.activityCount,
     }));
 
+    const hikingSeries = sortedWeeks.map<HikingPoint>((weekData) => ({
+      week: weekData.week,
+      weekStartISO: weekData.weekStartISO,
+      movingHours: secondsToHours(weekData.totals.hiking.movingSeconds),
+      distanceKm: metersToKilometers(weekData.totals.hiking.distanceMeters),
+      elevationM: Math.round(weekData.totals.hiking.elevationMeters),
+      activityCount: weekData.totals.hiking.activityCount,
+    }));
+
     return {
       overallSeries,
       perSportSeries: {
         elliptical: ellipticalSeries,
         cycling: cyclingSeries,
+        hiking: hikingSeries,
       },
     };
   }, [referenceWeeks, volumeBySport]);
@@ -256,12 +282,25 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
       ];
     }
 
-    const point = latestWeek as CyclingPoint;
-    return [
-      { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
-      { label: "Distance", value: `${point.distanceKm.toFixed(1)} km` },
-      { label: "Elevation", value: `${point.elevationM.toLocaleString()} m` },
-    ];
+    if (selectedSport === "cycling") {
+      const point = latestWeek as CyclingPoint;
+      return [
+        { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
+        { label: "Distance", value: `${point.distanceKm.toFixed(1)} km` },
+        { label: "Elevation", value: `${point.elevationM.toLocaleString()} m` },
+      ];
+    }
+
+    if (selectedSport === "hiking") {
+      const point = latestWeek as HikingPoint;
+      return [
+        { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
+        { label: "Distance", value: `${point.distanceKm.toFixed(1)} km` },
+        { label: "Elevation", value: `${point.elevationM.toLocaleString()} m` },
+      ];
+    }
+
+    return [];
   })();
 
   return (
@@ -303,8 +342,8 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                 labelStyle={{ color: "black" }}
                 formatter={(value: number | string, name) => {
                   const numericValue = typeof value === "number" ? value : Number(value);
-                  if (name === "ellipticalHours" || name === "cyclingHours") {
-                    const sport = name === "ellipticalHours" ? "elliptical" : "cycling";
+                  if (name === "ellipticalHours" || name === "cyclingHours" || name === "hikingHours") {
+                    const sport = name === "ellipticalHours" ? "elliptical" : name === "cyclingHours" ? "cycling" : "hiking";
                     return [formatHoursMinutes(numericValue), sportLabels[sport]];
                   }
                   if (name === "totalHours") {
@@ -322,6 +361,9 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                   }
                   if (value === "cyclingHours") {
                     return sportLabels.cycling;
+                  }
+                  if (value === "hikingHours") {
+                    return sportLabels.hiking;
                   }
                   return "Total";
                 }}
@@ -341,6 +383,15 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                 stackId="hours"
                 name="cyclingHours"
                 fill={sportColors.cycling}
+                radius={[4, 4, 0, 0]}
+                barSize={18}
+              />
+              <Bar
+                yAxisId="timeLeft"
+                dataKey="hikingHours"
+                stackId="hours"
+                name="hikingHours"
+                fill={sportColors.hiking}
                 radius={[4, 4, 0, 0]}
                 barSize={18}
               />
@@ -374,11 +425,10 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                   key={sport}
                   type="button"
                   onClick={() => setSelectedSport(sport)}
-                  className={`flex items-center rounded-full px-3 py-1 text-sm font-medium transition ${
-                    isActive
-                      ? "bg-primary text-primary-content shadow"
-                      : "text-base-content/70 hover:text-base-content"
-                  }`}
+                  className={`flex items-center rounded-full px-3 py-1 text-sm font-medium transition ${isActive
+                    ? "bg-primary text-primary-content shadow"
+                    : "text-base-content/70 hover:text-base-content"
+                    }`}
                 >
                   {sportLabels[sport]}
                 </button>
@@ -455,7 +505,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                     dot={{ r: 3 }}
                   />
                 </ComposedChart>
-              ) : (
+              ) : selectedSport === "cycling" ? (
                 <ComposedChart
                   data={perSportSeries.cycling}
                   margin={{ top: 8, right: 32, bottom: 16, left: 0 }}
@@ -552,7 +602,104 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                     dot={{ r: 2 }}
                   />
                 </ComposedChart>
-              )}
+              ) : selectedSport === "hiking" ? (
+                <ComposedChart
+                  data={perSportSeries.hiking}
+                  margin={{ top: 8, right: 32, bottom: 16, left: 0 }}
+                >
+                  <CartesianGrid
+                    stroke={theme.axisColor}
+                    strokeOpacity={0.12}
+                    strokeDasharray="3 3"
+                  />
+                  <XAxis
+                    dataKey="week"
+                    tick={{ fill: theme.axisColor, fontSize: 12 }}
+                    tickMargin={8}
+                  />
+                  <YAxis
+                    yAxisId="time"
+                    tickFormatter={formatHoursLabel}
+                    tick={{ fill: theme.axisColor, fontSize: 12 }}
+                    width={50}
+                  />
+                  <YAxis
+                    yAxisId="distance"
+                    orientation="right"
+                    tickFormatter={(value) => `${value} km`}
+                    tick={{ fill: theme.axisColor, fontSize: 12 }}
+                    width={60}
+                  />
+                  <YAxis yAxisId="elevation" orientation="right" hide />
+                  <Tooltip
+                    cursor={{ fill: "rgba(99, 102, 241, 0.08)" }}
+                    contentStyle={{
+                      borderRadius: 12,
+                      backgroundColor: theme.tooltipBackground,
+                      borderColor: theme.tooltipBorder,
+                      color: "black",
+                      fontSize: "0.875rem",
+                    }}
+                    labelStyle={{ color: "black" }}
+                    formatter={(value: number | string, name) => {
+                      const numericValue = typeof value === "number" ? value : Number(value);
+                      if (name === "movingHours") {
+                        return [formatHoursMinutes(numericValue), "Time"];
+                      }
+                      if (name === "distanceKm") {
+                        return [`${numericValue.toFixed(1)} km`, "Distance"];
+                      }
+                      if (name === "elevationM") {
+                        return [`${Math.round(numericValue).toLocaleString()} m`, "Elevation gain"];
+                      }
+                      return [value, name];
+                    }}
+                    labelFormatter={(label) => `Week of ${label}`}
+                  />
+                  <Legend
+                    wrapperStyle={{ color: theme.axisColor, fontSize: "0.75rem" }}
+                    formatter={(value) => {
+                      if (value === "movingHours") {
+                        return "Time";
+                      }
+                      if (value === "distanceKm") {
+                        return "Distance";
+                      }
+                      if (value === "elevationM") {
+                        return "Elevation";
+                      }
+                      return value;
+                    }}
+                  />
+                  <Bar
+                    yAxisId="time"
+                    dataKey="movingHours"
+                    name="movingHours"
+                    barSize={18}
+                    radius={[4, 4, 0, 0]}
+                    fill={sportColors.cycling}
+                  />
+                  <Line
+                    yAxisId="distance"
+                    type="monotone"
+                    dataKey="distanceKm"
+                    name="distanceKm"
+                    stroke="#2563eb"
+                    strokeWidth={3}
+                    dot={{ r: 3 }}
+                  />
+                  <Line
+                    yAxisId="elevation"
+                    type="monotone"
+                    dataKey="elevationM"
+                    name="elevationM"
+                    stroke="#f59e0b"
+                    strokeWidth={2}
+                    strokeDasharray="4 4"
+                    dot={{ r: 2 }}
+                  />
+                </ComposedChart>
+              ) : null}
             </ResponsiveContainer>
           ) : (
             <div className="flex h-full items-center justify-center text-base-content/60">
@@ -560,8 +707,8 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
             </div>
           )}
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 };
 

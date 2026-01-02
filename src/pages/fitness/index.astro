@@ -22,114 +22,102 @@ const fitnessCards: FitnessCard[] = [
 ];
 
 const sectionDescriptions: Record<string, string> = {
-  Injury: "Rehab notes and return-to-running frameworks for common setbacks.",
-  Training: "Workouts, drills, and strength protocols supporting running performance.",
-  Recovery: "Rest strategies, mobility routines, and load-management experiments.",
-  Health: "Nutrition, biomarker tracking, and broader wellness observations.",
+  Injury: "Rehab notes and return-to-running frameworks.",
+  Training: "Workouts, drills, and strength protocols.",
+  Recovery: "Rest strategies and load-management experiments.",
+  Health: "Nutrition, biomarker tracking, and wellness.",
 };
 
-const knowledgeSections = ["Injury", "Training", "Recovery", "Health"].map((category) => ({
-  title: category,
-  description: sectionDescriptions[category],
-  cards: fitnessCards.filter((card) => card.category === category),
-})).filter((section) => section.cards.length > 0);
+const knowledgeSections = ["Injury", "Training", "Recovery", "Health"]
+  .map((category) => ({
+    title: category,
+    description: sectionDescriptions[category],
+    cards: fitnessCards.filter((card) => card.category === category),
+  }))
+  .filter((section) => section.cards.length > 0);
 ---
 
 <Layout
-  title="Fitness - Gabriele Angeletti"
-  description="Personal dashboard and knowledge base for training, recovery, and health optimization."
+  title="Training Log - Gabriele Angeletti"
+  description="Personal dashboard for training, recovery, and health optimization."
 >
   <AppShell>
-    <div class="p-4 lg:py-18">
-      <div class="max-w-6xl mx-auto">
-        <!-- Header Section -->
-        <div class="text-center mb-12">
-          <h1 class="text-4xl font-bold text-base-content mb-4">Fitness</h1>
-          <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
-            Personal dashboard and knowledge base for training, recovery, and health optimization.
-          </p>
-        </div>
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[100px] opacity-40 mix-blend-screen"></div>
+        <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] opacity-30 mix-blend-screen"></div>
+    </div>
 
-        <div class="space-y-16">
-          <section class="relative rounded-3xl border border-sky-500/15 bg-gradient-to-br from-sky-500/15 via-base-100 to-base-100 p-8 shadow-xl shadow-sky-500/10">
-            <div
-              class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_55%)]"
-              aria-hidden="true"
-            />
-            <div class="relative flex flex-col gap-8">
-              <header class="flex flex-col gap-3">
-                <span class="text-xs font-semibold uppercase tracking-[0.35em] text-sky-500/80">
-                  Running
-                </span>
-                <h2 class="text-3xl font-bold text-base-content">Performance workbook</h2>
-              </header>
-              <div class="grid gap-6">
-                <article class="relative overflow-hidden rounded-3xl border border-sky-500/10 bg-base-100/80 p-6 shadow-lg">
-                  <div
-                    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_60%)]"
-                    aria-hidden="true"
-                  />
-                  <div class="relative flex flex-col gap-4">
-                    <div class="mt-2 mb-2">
-                       <RunningYTDStats client:load />
-                    </div>
-                    <div class="divider my-0 opacity-50"></div>
-
-                    <div class="flex flex-col gap-1">
-                      <h3 class="text-2xl font-semibold text-base-content">Weekly volume</h3>
-                      <p class="text-sm text-base-content/60">
-                        Weekly distance and elevation to highlight load trends.
-                      </p>
-                    </div>
-                    <RunningVolume client:load showHeading={false} />
-                  </div>
-                </article>
-                <article class="relative overflow-hidden rounded-3xl border border-sky-500/10 bg-base-100/80 p-6 shadow-lg">
-                  <div
-                    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.12),transparent_55%)]"
-                    aria-hidden="true"
-                  />
-                  <div class="relative flex flex-col gap-4">
-                    <div class="flex flex-col gap-1">
-                      <h3 class="text-2xl font-semibold text-base-content">Upcoming events</h3>
-                      <p class="text-sm text-base-content/60">
-                        Race calendar with a countdown to stay ahead of training blocks.
-                      </p>
-                    </div>
-                    <RunningEvents client:load />
-                  </div>
-                </article>
-              </div>
+    <div class="relative z-10 p-6 lg:p-12 font-sans">
+      <div class="max-w-6xl mx-auto space-y-6">
+        <header class="border-b border-base-content/5 pb-4">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="space-y-2">
+              <h1 class="text-4xl md:text-5xl font-black tracking-tight text-base-content">
+                Training Log
+              </h1>
+              <p class="text-lg text-base-content/60 font-medium max-w-2xl">
+                Tracking the miles, the metrics, and the occasional injury.
+              </p>
             </div>
-          </section>
+          </div>
+        </header>
 
+        <section class="space-y-6">
+            <div class="relative overflow-hidden rounded-2xl bg-base-100/40 border border-base-content/5 shadow-xl shadow-sky-900/5 backdrop-blur-xl">
+                <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 to-transparent opacity-50"></div>
+                <div class="relative p-6 md:p-8">
+                    <RunningYTDStats client:load />
+                </div>
+            </div>
+
+            <div class="relative rounded-2xl bg-base-100/60 border border-base-content/5 p-6 md:p-8 shadow-lg backdrop-blur-md">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-base-content">Weekly Volume</h3>
+                        <p class="text-sm text-base-content/50">Distance and elevation trends.</p>
+                    </div>
+                </div>
+                <RunningVolume client:load showHeading={false} />
+            </div>
+        </section>
+
+        <section>
+             <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-lg font-bold text-base-content">Race Calendar</h2>
+                <span class="h-px flex-1 bg-base-content/10"></span>
+             </div>
+             <RunningEvents client:load />
+        </section>
+
+        <div class="space-y-16 pt-8">
           {knowledgeSections.map((section) => (
-            <section>
-              <span class="text-xs font-semibold uppercase tracking-[0.35em] text-base-content/50">
-                {section.title}
-              </span>
-              <div class="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h2 class="text-3xl font-bold text-base-content">{section.title}</h2>
-                <p class="max-w-2xl text-base-content/60">{section.description}</p>
+            <section class="relative">
+              <div class="flex items-baseline gap-6 mb-8">
+                <h2 class="text-3xl font-bold text-base-content relative z-10">{section.title}</h2>
+                <div class="h-px flex-1 bg-base-content/10"></div>
+                <p class="text-sm text-base-content/60 max-w-xs text-right hidden sm:block">{section.description}</p>
               </div>
 
-              <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.cards.map((card) => (
-                  <article class="card group bg-base-100 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                    <div class="card-body">
-                      <h3 class="card-title text-xl font-bold text-base-content">
-                        {card.title}
-                      </h3>
-                      <p class="text-base-content/70 leading-relaxed">
-                        {card.description}
-                      </p>
-                      <div class="card-actions justify-end">
-                        <a href={card.href} class="btn btn-primary btn-sm">
-                          View guide
-                        </a>
+                  <a href={card.href} class="group relative block h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-sky-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 blur-lg"></div>
+                    <article class="relative h-full rounded-2xl bg-base-100 border border-base-content/5 p-6 shadow-sm transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl flex flex-col justify-between">
+                      <div class="relative z-10">
+                        <h3 class="text-lg font-bold text-base-content mb-2 group-hover:text-sky-600 transition-colors">
+                          {card.title}
+                        </h3>
+                        <p class="text-base-content/60 leading-relaxed text-sm">
+                          {card.description}
+                        </p>
                       </div>
-                    </div>
-                  </article>
+                      <div class="relative z-10 mt-6 flex justify-end">
+                        <span class="text-xs font-bold uppercase tracking-widest text-base-content/40 group-hover:text-sky-500 transition-colors flex items-center gap-2">
+                           Read Note <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </span>
+                      </div>
+                    </article>
+                  </a>
                 ))}
               </div>
             </section>

@@ -56,75 +56,56 @@ const RunningYTDStats = () => {
     const currentYear = new Date().getFullYear();
     const { hours, minutes } = getDurationUnits(volume?.totalMovingTimeSeconds || 0);
 
+    const StatItem = ({ icon: Icon, label, value, sub, colorClass, delay }: any) => (
+        <div className={`flex flex-col items-start gap-1 group animate-in fade-in slide-in-from-bottom-4 duration-700 ${delay}`}>
+            <div className={`flex items-center gap-1.5 ${colorClass} mb-1 opacity-70`}>
+                <Icon className="size-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-base-content/60">{label}</span>
+            </div>
+            {isPending ? (
+                <div className="h-10 w-24 bg-base-content/5 animate-pulse rounded" />
+            ) : (
+                <div className="flex items-baseline gap-1">
+                    <span className="text-4xl md:text-5xl font-black tracking-tighter text-base-content">
+                        {value}
+                    </span>
+                    <span className="text-sm font-bold text-base-content/40">{sub}</span>
+                </div>
+            )}
+        </div>
+    );
+
     return (
-        <div className="w-full">
-            <div className="flex items-center justify-between mb-4">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-base-content/50">
-                    {currentYear} Year to Date
-                </h4>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="shrink-0">
+                <span className="text-[10px] font-bold text-base-content/30 uppercase tracking-[0.2em]">{currentYear} Totals</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 divide-x divide-base-content/10">
-                <div className="flex flex-col gap-1 pr-4">
-                    <div className="flex items-center gap-2 text-sky-500 mb-1">
-                        <TbActivity className="size-4" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
-                            Distance
-                        </span>
-                    </div>
-                    {isPending ? (
-                        <div className="h-8 w-24 bg-base-content/10 animate-pulse rounded" />
-                    ) : (
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-base-content tracking-tight">
-                                {formatDistance(volume?.totalDistanceMeters || 0)}
-                            </span>
-                            <span className="text-sm font-medium text-base-content/60">km</span>
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex flex-col gap-1 px-4">
-                    <div className="flex items-center gap-2 text-emerald-500 mb-1">
-                        <TbMountain className="size-4" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
-                            Elevation
-                        </span>
-                    </div>
-                    {isPending ? (
-                        <div className="h-8 w-24 bg-base-content/10 animate-pulse rounded" />
-                    ) : (
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-black text-base-content tracking-tight">
-                                {formatElevation(volume?.totalElevationGainMeters || 0)}
-                            </span>
-                            <span className="text-sm font-medium text-base-content/60">m</span>
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex flex-col gap-1 pl-4">
-                    <div className="flex items-center gap-2 text-orange-400 mb-1">
-                        <TbClock className="size-4" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-base-content/60">
-                            Time
-                        </span>
-                    </div>
-                    {isPending ? (
-                        <div className="h-8 w-24 bg-base-content/10 animate-pulse rounded" />
-                    ) : (
-                        <div className="flex items-baseline gap-2">
-                            <div>
-                                <span className="text-3xl font-black text-base-content">{hours}</span>
-                                <span className="text-sm font-medium text-base-content/60 ml-1">h</span>
-                            </div>
-                            <div>
-                                <span className="text-3xl font-black text-base-content">{minutes}</span>
-                                <span className="text-sm font-medium text-base-content/60 ml-1">m</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
+            <div className="flex-1 grid grid-cols-3 gap-4 md:gap-12 border-t md:border-t-0 border-base-content/5 pt-4 md:pt-0">
+                <StatItem
+                    icon={TbActivity}
+                    label="Distance"
+                    value={formatDistance(volume?.totalDistanceMeters || 0)}
+                    sub="km"
+                    colorClass="text-sky-500"
+                    delay="delay-100"
+                />
+                <StatItem
+                    icon={TbMountain}
+                    label="Elevation"
+                    value={formatElevation(volume?.totalElevationGainMeters || 0)}
+                    sub="m"
+                    colorClass="text-emerald-500"
+                    delay="delay-200"
+                />
+                <StatItem
+                    icon={TbClock}
+                    label="Time"
+                    value={hours}
+                    sub={`h ${minutes}m`}
+                    colorClass="text-orange-400"
+                    delay="delay-300"
+                />
             </div>
         </div>
     );

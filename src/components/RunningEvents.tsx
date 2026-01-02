@@ -16,7 +16,6 @@ interface RunningEvent {
 
 interface EnrichedEvent extends RunningEvent {
   weeksUntil: number;
-  formattedDate: string;
   weeksLabel: string;
   formattedDistance: string;
   formattedElevation: string;
@@ -65,14 +64,8 @@ const formatter = new Intl.DateTimeFormat("en", {
 });
 
 const formatWeeksLabel = (weeksUntil: number): string => {
-  if (weeksUntil <= 0) {
-    return "This week";
-  }
-
-  if (weeksUntil === 1) {
-    return "1 week";
-  }
-
+  if (weeksUntil <= 0) return "This week";
+  if (weeksUntil === 1) return "1 week";
   return `${weeksUntil} weeks`;
 };
 
@@ -80,24 +73,13 @@ const calculateWeeksUntil = (dateISO: string): number => {
   const today = new Date();
   const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const eventDate = new Date(dateISO);
-
   const diffMs = eventDate.getTime() - startOfToday.getTime();
   const weeks = diffMs / (1000 * 60 * 60 * 24 * 7);
-
-  if (weeks <= 0) {
-    return 0;
-  }
-
-  return Math.ceil(weeks);
+  return weeks <= 0 ? 0 : Math.ceil(weeks);
 };
 
-const formatDistance = (distanceKm: number): string => {
-  if (Number.isInteger(distanceKm)) {
-    return `${distanceKm} km`;
-  }
-
-  return `${distanceKm.toFixed(1)} km`;
-};
+const formatDistance = (distanceKm: number): string =>
+  Number.isInteger(distanceKm) ? `${distanceKm} km` : `${distanceKm.toFixed(1)} km`;
 
 const formatElevation = (elevationM: number): string => `${elevationM} m`;
 
@@ -106,11 +88,9 @@ const RunningEvents = () => {
     return upcomingEvents
       .map((event) => {
         const weeksUntil = calculateWeeksUntil(event.dateISO);
-
         return {
           ...event,
           weeksUntil,
-          formattedDate: formatter.format(new Date(event.dateISO)),
           weeksLabel: formatWeeksLabel(weeksUntil),
           formattedDistance: formatDistance(event.distanceKm),
           formattedElevation: formatElevation(event.elevationGainM),
@@ -122,62 +102,61 @@ const RunningEvents = () => {
   return (
     <div className="space-y-4">
       {events.map((event) => (
-        <article
+        <a
           key={event.id}
-          className="flex items-center gap-4 rounded-2xl border border-sky-500/10 bg-base-100/70 p-4 shadow-lg shadow-sky-500/10 backdrop-blur-sm"
+          href={event.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex items-start gap-4 p-4 rounded-2xl bg-base-100 border border-base-content/5 transition-all duration-300 hover:shadow-lg hover:border-sky-500/30 overflow-hidden"
         >
-          <div className="h-20 w-20 overflow-hidden rounded-2xl border border-base-content/10">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-base-content/10 bg-base-content/5">
             {event.image ? (
               <img
                 src={event.image}
-                alt={`${event.name} cover art`}
-                className="h-full w-full object-cover"
+                alt={event.name}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                 loading="lazy"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-base-content/5 text-2xl font-semibold text-base-content/40">
+              <div className="flex h-full w-full items-center justify-center text-lg font-bold text-base-content/30">
                 {event.name.charAt(0)}
               </div>
             )}
           </div>
-          <div className="flex flex-1 flex-col gap-2">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <h3 className="text-lg font-semibold text-base-content">
-                  <a href={event.url} target="_blank" rel="noopener noreferrer">
-                    {event.name}
-                  </a>
-                </h3>
-                <p className="text-sm text-base-content/60">{event.location}</p>
-              </div>
-              <div className="flex flex-col items-end">
-                <span className="text-2xl font-semibold text-sky-500">{event.weeksUntil}</span>
-                <span className="text-xs uppercase tracking-[0.25em] text-base-content/60">
-                  weeks
-                </span>
-              </div>
+
+          <div className="flex-1 min-w-0 flex flex-col gap-1 py-0.5">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="text-md font-bold text-base-content leading-tight group-hover:text-sky-600 transition-colors line-clamp-2">
+                {event.name}
+              </h3>
             </div>
-            <div className="flex flex-wrap items-center gap-2 text-sm text-base-content/70">
-              <span className="rounded-full border border-base-content/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-base-content/60">
-                {event.type === "race" ? "Race" : event.type}
-              </span>
-              <span>{event.formattedDate}</span>
-              <span className="text-base-content/40">•</span>
-              <span>{event.weeksLabel}</span>
-            </div>
-            <div className="flex flex-wrap gap-4 text-sm text-base-content/70">
+
+            <p className="text-xs text-base-content/50 truncate">{event.location}</p>
+
+            <div className="mt-auto flex items-center gap-3 text-xs font-medium text-base-content/70">
               <span className="flex items-center gap-1">
-                <span className="text-base-content/50">Distance</span>
-                <span className="font-medium text-base-content">{event.formattedDistance}</span>
+                <svg className="w-3 h-3 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                {event.formattedDistance}
               </span>
               <span className="flex items-center gap-1">
-                <span className="text-base-content/50">Elevation</span>
-                <span className="font-medium text-base-content">{event.formattedElevation}</span>
+                <svg className="w-3 h-3 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" /></svg>
+                {event.formattedElevation}
               </span>
             </div>
           </div>
-        </article>
+
+          <div className="absolute top-4 right-4 flex flex-col items-end leading-none pointer-events-none">
+            <span className="text-2xl font-bold text-sky-500">{event.weeksUntil}</span>
+            <span className="text-[9px] uppercase tracking-wide text-base-content/40">wks</span>
+          </div>
+        </a>
       ))}
+
+      {events.length === 0 && (
+        <div className="col-span-full p-8 text-center border border-dashed border-base-content/20 rounded-2xl">
+          <p className="text-sm text-base-content/50">No upcoming races configured.</p>
+        </div>
+      )}
     </div>
   );
 };

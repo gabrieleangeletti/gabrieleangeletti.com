@@ -77,3 +77,6 @@ cypress/screenshots/
 
 # Astro
 .astro
+
+# Env files
+.env
