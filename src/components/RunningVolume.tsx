@@ -16,6 +16,12 @@ interface RunningVolumeData {
       totalElapsedTimeSeconds: number;
       totalMovingTimeSeconds: number;
       totalElevationGainMeters: number;
+      longest: {
+        elapsedTimeSeconds: number;
+        movingTimeSeconds: number;
+        distanceMeters: number;
+        elevationGainMeters: number;
+      };
     }[];
   };
   frequency: string;
@@ -65,75 +71,78 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
       return [];
     }
 
-    const runningData = data.data["running"] || [];
-    const trailRunningData = data.data["trail-running"] || [];
+    const targetSports = ["running", "trail-running"];
 
-    const mergedByPeriod = new Map<string, typeof runningData[0]>();
+    const mergedByPeriod = new Map<string, (typeof data.data)["running"][0]>();
 
-    for (const entry of runningData) {
-      mergedByPeriod.set(entry.period, { ...entry });
-    }
+    targetSports.forEach((sport) => {
+      const sportEntries = data.data[sport] || [];
 
-    for (const entry of trailRunningData) {
-      const existing = mergedByPeriod.get(entry.period);
-      if (existing) {
-        existing.activityCount += entry.activityCount;
-        existing.totalDistanceMeters += entry.totalDistanceMeters;
-        existing.totalElapsedTimeSeconds += entry.totalElapsedTimeSeconds;
-        existing.totalMovingTimeSeconds += entry.totalMovingTimeSeconds;
-        existing.totalElevationGainMeters += entry.totalElevationGainMeters;
-      } else {
-        mergedByPeriod.set(entry.period, { ...entry });
+      for (const entry of sportEntries) {
+        const existing = mergedByPeriod.get(entry.period);
+
+        if (existing) {
+          existing.activityCount += entry.activityCount;
+          existing.totalDistanceMeters += entry.totalDistanceMeters;
+          existing.totalElapsedTimeSeconds += entry.totalElapsedTimeSeconds;
+          existing.totalMovingTimeSeconds += entry.totalMovingTimeSeconds;
+          existing.totalElevationGainMeters += entry.totalElevationGainMeters;
+          existing.activityCount += entry.activityCount;
+
+          if (entry.longest.elapsedTimeSeconds > existing.longest.elapsedTimeSeconds) {
+            existing.longest = { ...entry.longest };
+          }
+        } else {
+          mergedByPeriod.set(entry.period, {
+            ...entry,
+            longest: { ...entry.longest },
+          });
+        }
       }
-    }
+    });
 
     const mergedData = Array.from(mergedByPeriod.values()).sort((a, b) =>
-      a.period.localeCompare(b.period)
+      a.period.localeCompare(b.period),
     );
 
     return mergedData
       .map((entry, index) => {
         const [weekLabel, weekStartISO] = formatWeek(entry.period);
-        if (index === 0) {
-          return {
-            week: weekLabel,
-            weekStartISO,
-            timeSeconds: entry.totalMovingTimeSeconds,
-            distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
-            elevationM: Math.round(entry.totalElevationGainMeters),
-            previousWeekTimeChange: 0,
-            previousWeekDistanceChange: 0,
-            previousWeekElevationChange: 0,
-          };
+
+        let previousWeekTimeChange = 0;
+        let previousWeekDistanceChange = 0;
+        let previousWeekElevationChange = 0;
+
+        if (index > 0) {
+          const previousWeek = mergedData[index - 1];
+
+          if (previousWeek.totalElapsedTimeSeconds > 0) {
+            previousWeekTimeChange =
+              ((entry.totalElapsedTimeSeconds - previousWeek.totalElapsedTimeSeconds) /
+                previousWeek.totalElapsedTimeSeconds) *
+              100;
+          } else {
+            previousWeekTimeChange = Infinity;
+          }
+
+          if (previousWeek.totalDistanceMeters > 0) {
+            previousWeekDistanceChange =
+              ((entry.totalDistanceMeters - previousWeek.totalDistanceMeters) /
+                previousWeek.totalDistanceMeters) *
+              100;
+          } else {
+            previousWeekDistanceChange = Infinity;
+          }
+
+          if (previousWeek.totalElevationGainMeters > 0) {
+            previousWeekElevationChange =
+              ((entry.totalElevationGainMeters - previousWeek.totalElevationGainMeters) /
+                previousWeek.totalElevationGainMeters) *
+              100;
+          } else {
+            previousWeekElevationChange = Infinity;
+          }
         }
-
-        const previousWeek = mergedData[index - 1];
-
-        const previousWeekTimeSeconds = previousWeek ? previousWeek.totalElapsedTimeSeconds : 0;
-        const previousWeekTimeChange =
-          previousWeekTimeSeconds === 0
-            ? Infinity
-            : ((entry.totalElapsedTimeSeconds - previousWeekTimeSeconds) /
-              previousWeekTimeSeconds) *
-            100;
-
-        const previousWeekDistanceMeters = previousWeek ? previousWeek.totalDistanceMeters : 0;
-        const previousWeekDistanceChange =
-          previousWeekDistanceMeters === 0
-            ? Infinity
-            : ((entry.totalDistanceMeters - previousWeekDistanceMeters) /
-              previousWeekDistanceMeters) *
-            100;
-
-        const previousWeekElevationMeters = previousWeek
-          ? previousWeek.totalElevationGainMeters
-          : 0;
-        const previousWeekElevationChange =
-          previousWeekElevationMeters === 0
-            ? Infinity
-            : ((entry.totalElevationGainMeters - previousWeekElevationMeters) /
-              previousWeekElevationMeters) *
-            100;
 
         return {
           week: weekLabel,
@@ -141,9 +150,16 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           timeSeconds: entry.totalElapsedTimeSeconds,
           distanceKm: Number((entry.totalDistanceMeters / 1000).toFixed(1)),
           elevationM: Math.round(entry.totalElevationGainMeters),
-          previousWeekTimeChange: previousWeekTimeChange,
-          previousWeekDistanceChange: previousWeekDistanceChange,
-          previousWeekElevationChange: previousWeekElevationChange,
+          activityCount: entry.activityCount,
+          previousWeekTimeChange,
+          previousWeekDistanceChange,
+          previousWeekElevationChange,
+          longest: {
+            distanceKm: Number((entry.longest.distanceMeters / 1000).toFixed(1)),
+            elevationM: entry.longest.elevationGainMeters,
+            elapsedTimeSeconds: entry.longest.elapsedTimeSeconds,
+            movingTimeSeconds: entry.longest.movingTimeSeconds,
+          },
         };
       })
       .sort((a, b) => a.weekStartISO.localeCompare(b.weekStartISO));

@@ -25,9 +25,16 @@ export interface RunningVolumePoint {
   timeSeconds: number;
   distanceKm: number;
   elevationM: number;
+  activityCount: number;
   previousWeekTimeChange: number;
   previousWeekDistanceChange: number;
   previousWeekElevationChange: number;
+  longest: {
+    distanceKm: number;
+    elevationM: number;
+    elapsedTimeSeconds: number;
+    movingTimeSeconds: number;
+  };
 }
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
@@ -66,6 +73,12 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
     return formattedChange;
   };
 
+  const formatLongestTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  };
+
   return (
     <div
       style={{
@@ -95,6 +108,16 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
         <span style={{ color: "black" }}>
           Time: {formatHoursMinutes(dataPoint.timeSeconds / 3600)} {getFormattedTimePrevWeek()}
         </span>
+      </p>
+
+      <p style={{ margin: "0 0 8px 0", fontSize: "0.75rem", color: "#666" }}>
+        Longest: {dataPoint.longest.distanceKm.toFixed(1)}km / {dataPoint.longest.elevationM}m /{" "}
+        {formatLongestTime(dataPoint.longest.movingTimeSeconds)} (
+        {((dataPoint.longest.elapsedTimeSeconds / dataPoint.timeSeconds) * 100).toFixed(2)}%)
+      </p>
+
+      <p style={{ margin: "0 0 8px 0", fontSize: "0.75rem", color: "#666" }}>
+        Activities: {dataPoint.activityCount}
       </p>
     </div>
   );
