@@ -1,0 +1,174 @@
+---
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<dialog id="fitness-modal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box bg-base-100 border border-base-content/10 shadow-2xl p-6 sm:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-bold text-2xl tracking-tight">Your miles, visualized.</h3>
+      <button id="close-modal" class="btn btn-sm btn-circle btn-ghost">
+        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="18" width="18">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <p class="text-base-content/70 mb-6 leading-relaxed">
+      I’m thinking about opening this dashboard up to the running community. If you’d like to see your own stats visualized like this, join the waitlist below.
+    </p>
+
+    <form id="signup-form" class="space-y-6">
+      <div class="form-control w-full">
+        <input
+          id="email-input"
+          type="email"
+          placeholder="your@email.com"
+          class="input input-bordered w-full focus:input-primary"
+          required
+        />
+        <label class="label pb-0">
+          <span class="label-text-alt text-base-content/50 italic">
+            No spam, ever. I’ll only email you if I launch.
+          </span>
+        </label>
+      </div>
+
+      <div id="turnstile-widget" class="flex justify-center min-h-[65px]"></div>
+      <input type="hidden" id="turnstile-token" name="turnstile-token" />
+
+      <div id="form-message" class="text-sm hidden text-center"></div>
+
+      <div class="modal-action mt-0">
+        <button type="submit" id="submit-btn" class="btn btn-primary w-full text-lg">
+          Let me know when it's ready
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button id="close-backdrop">close</button>
+  </form>
+</dialog>
+
+{TURNSTILE_SITE_KEY && (
+  <script is:inline>
+    window.addEventListener('load', function () {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    });
+  </script>
+)}
+
+<script define:vars={{ TURNSTILE_SITE_KEY }}>
+  function initModal() {
+    const modal = document.getElementById("fitness-modal");
+    const openBtns = document.querySelectorAll(".open-signup-modal");
+    const closeBtn = document.getElementById("close-modal");
+    const closeBackdrop = document.getElementById("close-backdrop");
+    const form = document.getElementById("signup-form");
+    const emailInput = document.getElementById("email-input");
+    const formMessage = document.getElementById("form-message");
+    const submitBtn = document.getElementById("submit-btn");
+    const turnstileContainer = document.getElementById("turnstile-widget");
+    const turnstileTokenInput = document.getElementById("turnstile-token");
+
+    if (!modal) return;
+
+    let widgetId = null;
+
+    const loadTurnstile = () => {
+      if (!TURNSTILE_SITE_KEY) return;
+      if (!turnstileContainer) return;
+      if (typeof window === "undefined" || !window.turnstile) return;
+
+      if (widgetId) {
+        window.turnstile.reset(widgetId);
+      } else {
+        widgetId = window.turnstile.render("#turnstile-widget", {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => {
+            if (turnstileTokenInput) {
+              turnstileTokenInput.value = token;
+            }
+          },
+          "error-callback": () => {
+            if (turnstileTokenInput) {
+              turnstileTokenInput.value = "";
+            }
+          },
+        });
+      }
+    };
+
+    openBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modal.showModal();
+        setTimeout(loadTurnstile, 100);
+      });
+    });
+
+    const closeModal = () => modal.close();
+    closeBtn?.addEventListener("click", closeModal);
+    closeBackdrop?.addEventListener("click", closeModal);
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = emailInput?.value;
+      const turnstileToken = turnstileTokenInput?.value;
+
+      if (!email) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+      }
+
+      try {
+        const response = await fetch("/api/fitness-signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, turnstileToken }),
+        });
+
+        const data = await response.json();
+
+        if (formMessage) {
+          formMessage.classList.remove("hidden", "text-error", "text-success");
+          if (response.ok) {
+            formMessage.classList.add("text-success");
+            formMessage.textContent = "Thanks! I'll keep you in the loop.";
+            form.reset();
+            if (turnstileTokenInput) turnstileTokenInput.value = "";
+            if (widgetId) window.turnstile.reset(widgetId);
+          } else {
+            formMessage.classList.add("text-error");
+            formMessage.textContent = data.error || "Something went wrong. Please try again.";
+          }
+        }
+      } catch (error) {
+        if (formMessage) {
+          formMessage.classList.remove("hidden");
+          formMessage.classList.add("text-error");
+          formMessage.textContent = "Network error. Please try again.";
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Let me know when it's ready";
+        }
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initModal);
+  } else {
+    initModal();
+  }
+</script>

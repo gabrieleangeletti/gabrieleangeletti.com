@@ -22,7 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
     "@vitejs/plugin-react": "^4.5.2",
-    "astro": "^5.16.6",
+    "astro": "^5.16.11",
     "daisyui": "^5.0.43",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
@@ -38,13 +38,13 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1",
     "vite": "^6.3.5",
-    "wrangler": "^4.39.0"
+    "wrangler": "^4.59.2"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/mdx": "^4.3.13",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/sitemap": "^3.7.0",
     "@astrojs/ts-plugin": "^1.10.6",
     "@googlemaps/polyline-codec": "^1.0.28",
     "@js-temporal/polyfill": "^0.5.1",

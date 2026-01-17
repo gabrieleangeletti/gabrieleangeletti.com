@@ -4,6 +4,7 @@ import AppShell from "../../components/AppShell.astro";
 import RunningVolume from "../../components/RunningVolume";
 import RunningEvents from "../../components/RunningEvents";
 import RunningYTDStats from "../../components/RunningYTDStats";
+import FitnessSignupModal from "../../components/FitnessSignupModal.astro";
 
 interface FitnessCard {
   title: string;
@@ -125,5 +126,15 @@ const knowledgeSections = ["Injury", "Training", "Recovery", "Health"]
         </div>
       </div>
     </div>
+
+    <button
+      class="open-signup-modal fixed bottom-6 right-6 z-50 btn btn-primary btn-circle btn-lg shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all hover:-translate-y-1 hover:scale-105"
+    >
+      <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24" width="24">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+    </button>
+
+    <FitnessSignupModal />
   </AppShell>
 </Layout>
