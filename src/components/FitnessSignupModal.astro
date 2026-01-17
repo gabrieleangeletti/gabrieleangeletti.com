@@ -1,7 +1,5 @@
 ---
-const { env } = Astro.locals.runtime;
-
-const TURNSTILE_SITE_KEY = env.PUBLIC_TURNSTILE_SITE_KEY;
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <dialog id="fitness-modal" class="modal modal-bottom sm:modal-middle">

@@ -6,7 +6,6 @@ declare namespace App {
       env: {
         VO2_API_BASE_URL: string;
         VO2_API_KEY: string;
-        PUBLIC_TURNSTILE_SITE_KEY: string;
       };
     };
   }
