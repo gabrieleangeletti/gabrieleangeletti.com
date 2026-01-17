@@ -11,4 +11,7 @@
   "observability": {
     "enabled": true,
   },
+  "vars": {
+    "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAACNBbMHlKZrJm-fQ",
+  },
 }
