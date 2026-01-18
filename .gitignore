@@ -80,3 +80,6 @@ cypress/screenshots/
 
 # Env files
 .env
+
+# MacOS
+.DS_Store

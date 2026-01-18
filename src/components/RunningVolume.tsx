@@ -165,6 +165,22 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
       .sort((a, b) => a.weekStartISO.localeCompare(b.weekStartISO));
   }, [data]);
 
+  const totals = useMemo(() => {
+    const totalDistanceKm = chartData.reduce((sum, week) => sum + week.distanceKm, 0);
+    const totalElevationM = chartData.reduce((sum, week) => sum + week.elevationM, 0);
+    const totalTimeSeconds = chartData.reduce((sum, week) => sum + week.timeSeconds, 0);
+
+    const hours = Math.floor(totalTimeSeconds / 3600);
+    const minutes = Math.round((totalTimeSeconds % 3600) / 60);
+    const timeFormatted = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+
+    return {
+      distance: totalDistanceKm.toFixed(0),
+      elevation: totalElevationM.toLocaleString(),
+      time: timeFormatted,
+    };
+  }, [chartData]);
+
   if (isPending) {
     return (
       <div className="flex h-80 items-center justify-center text-base-content/80">
@@ -196,7 +212,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <select
           value={monthsBack}
           onChange={(e) => setMonthsBack(Number(e.target.value))}
@@ -208,6 +224,20 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           <option value={6}>Last 6 months</option>
           <option value={12}>Last year</option>
         </select>
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1.5">
+            <span className="text-base-content/50">Distance</span>
+            <span className="font-semibold text-base-content">{totals.distance} km</span>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5">
+            <span className="text-base-content/50">Elevation</span>
+            <span className="font-semibold text-base-content">{totals.elevation} m</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-base-content/50">Time</span>
+            <span className="font-semibold text-base-content">{totals.time}</span>
+          </div>
+        </div>
       </div>
       <RunningVolumeChart data={chartData} showHeading={showHeading} />
       <CrossTrainingVolume
