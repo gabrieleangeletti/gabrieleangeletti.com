@@ -1,6 +1,68 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import AppShell from '../../../components/AppShell.astro';
+
+interface Exercise {
+  name: string;
+  description: string;
+  protocol: string[];
+  category: "strengthening" | "stretching" | "mobility";
+}
+
+const exercises: Exercise[] = [
+  {
+    name: "Isometric Holds",
+    description: "Useful for early-stage rehabilitation. Good for acute pain management, as it's been shown to reduce pain. Increase intensity by adding weight, not increasing reps or duration. 45 seconds of isometric hold is enough to send a stimulus to the tendon.",
+    protocol: [
+      "Hold single-leg calf raise for 45''",
+      "5 repetitions, 1 minute rest between",
+      "Pain should be 3/10 or less",
+      "If painless, increase intensity",
+      "3x per week"
+    ],
+    category: "strengthening"
+  },
+  {
+    name: "Eccentric Calf Raises",
+    description: "Gold standard for Achilles tendinopathy rehabilitation. Emphasize the slow movement, 3'' to rise, 3'' to lower, to promote tendon remodeling. Hold something for balance (this is not a balance exercise). If single-leg calf raises are too painful, consider raising with both legs and lowering with the affected leg only.",
+    protocol: [
+      "Stand on edge of step with forefoot only",
+      "Single-leg calf raise: 3'' to rise, 3'' to lower",
+      "3 sets of 15 reps",
+      "Pain should be 4/10 or less",
+      "Progress by adding weight",
+      "2x per week"
+    ],
+    category: "strengthening"
+  }
+];
+
+const stretches = [
+  {
+    name: "Wall Push Stretch",
+    description: "Hands against wall, step back affected leg. Keep heel down, lean forward. Hold 30-60 seconds, 3 times.",
+    type: "static"
+  },
+  {
+    name: "Towel Stretch",
+    description: "Sitting, loop towel around foot. Pull toes toward shin, hold 30 seconds. Repeat 3 times.",
+    type: "static"
+  },
+  {
+    name: "Ankle Circles",
+    description: "10 circles each direction. Focus on full range of motion. Good warm-up exercise.",
+    type: "dynamic"
+  },
+  {
+    name: "Calf Pumps",
+    description: "Point and flex foot 20 times. Promotes blood flow and reduces stiffness.",
+    type: "dynamic"
+  }
+];
+
+const resources = [
+  { name: "Physio-pedia", url: "https://www.physio-pedia.com/Achilles_Tendon" }
+];
 ---
 
 <Layout
@@ -8,7 +70,12 @@ import AppShell from '../../../components/AppShell.astro';
   description="Comprehensive guide to achilles tendon care, strengthening exercises, and injury prevention strategies."
 >
   <AppShell>
-    <div class="p-4 lg:py-18">
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-1/4 left-0 w-[600px] h-[400px] bg-orange-500/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    <div class="relative z-10 p-4 lg:py-18">
       <div class="max-w-4xl mx-auto">
         <div class="breadcrumbs text-sm mb-8">
           <ul>
@@ -18,106 +85,137 @@ import AppShell from '../../../components/AppShell.astro';
           </ul>
         </div>
 
-        <div class="mb-4">
-            <h1 class="text-4xl font-bold text-base-content mb-4">Achilles Tendon</h1>
-            <h3 class="font-semibold text-base-content mb-2">Links</h3>
-            <ul class="text-base-content/80 space-y-1">
-                <li>• <a href="https://www.physio-pedia.com/Achilles_Tendon">Physio-pedia</a></li>
-            </ul>
-        </div>
+        <header class="mb-12">
+          <h1 class="text-4xl md:text-5xl font-black tracking-tight text-base-content mb-4">
+            Achilles Tendon
+          </h1>
+          <p class="text-lg text-base-content/60 max-w-2xl mb-6">
+            Comprehensive guide to achilles tendon care, strengthening exercises, and injury prevention strategies.
+          </p>
+          
+          {resources.length > 0 && (
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm text-base-content/40">Resources:</span>
+              {resources.map((resource) => (
+                <a 
+                  href={resource.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  {resource.name}
+                </a>
+              ))}
+            </div>
+          )}
+        </header>
 
-        <div class="space-y-12">
-          <section class="card bg-base-100 shadow-lg">
-            <div class="card-body">
-              <h2 class="card-title text-2xl mb-6">Strengthening Exercises</h2>
-              <div class="space-y-8">
-                <div class="border-l-4 border-secondary pl-6">
-                    <h3 class="text-xl font-semibold mb-3">Isometric Holds</h3>
-                    <p class="text-base-content/80 mb-3">
-                        Useful for early-stage rehabilitation. Good for for acute pain management, as it's been shown to reduce pain.<br>
-                        Note: increase intensity by adding weight, not increasing reps or duration. It's been shown that 45 seconds of isometric hold is enough to send a stimulus to the tendon.
-                    </p>
-                    <div class="bg-base-200 p-4 rounded-lg">
-                        <h4 class="font-medium mb-2">Protocol:</h4>
-                        <ul class="text-sm space-y-1">
-                            <li>• Hold single-leg calf raise for 45''</li>
-                            <li>• 5 repetitions, 1 minute rest between</li>
-                            <li>• Pain should be 3/10 or less</li>
-                            <li>• If painless, increase intensity</li>
-                            <li>• 3x per week</li>
-                        </ul>
+        <!-- Strengthening Exercises -->
+        <section class="mb-16">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-base-content">Strengthening Exercises</h2>
+              <p class="text-sm text-base-content/50">Core rehabilitation movements</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            {exercises.map((exercise, i) => (
+              <div class="group relative overflow-hidden rounded-2xl border border-base-content/10 bg-gradient-to-r from-base-100 to-base-100/80 hover:border-base-content/20 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+                <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-orange-500/5 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="relative p-6 md:p-8">
+                  <div class="flex items-start gap-4 mb-4">
+                    <span class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center font-bold ring-1 ring-amber-500/30">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <h3 class="text-xl font-semibold text-base-content mb-2">{exercise.name}</h3>
+                      <p class="text-base-content/60 leading-relaxed">{exercise.description}</p>
                     </div>
-                </div>
-
-                <div class="border-l-4 border-primary pl-6">
-                  <h3 class="text-xl font-semibold mb-3">Eccentric Calf Raises</h3>
-                  <p class="text-base-content/80 mb-3">
-                      Gold standard for Achilles tendinopathy rehabilitation. Emphasize the slow movement, 3'' to rise, 3'' to lower, to promote tendon remodeling. Hold something for balance (this is not a balance exercise).<br>
-                      Note: if single-leg calf raises are too painful, consider raising with both legs and lowering with the affected leg only.
-                  </p>
-                  <div class="bg-base-200 p-4 rounded-lg">
-                    <h4 class="font-medium mb-2">Protocol:</h4>
-                    <ul class="text-sm space-y-1">
-                      <li>• Stand on edge of step with forefoot only</li>
-                      <li>• Single-leg calf raise: 3'' to rise, 3'' to lower</li>
-                      <li>• 3 sets of 15 reps</li>
-                      <li>• Pain should be 4/10 or less</li>
-                      <li>• Progress by adding weight</li>
-                      <li>• 2x per week</li>
+                  </div>
+                  
+                  <div class="ml-14 p-4 rounded-xl bg-base-200/50 border border-base-content/5">
+                    <h4 class="text-sm font-semibold text-base-content/80 mb-3 uppercase tracking-wider">Protocol</h4>
+                    <ul class="space-y-2">
+                      {exercise.protocol.map((step) => (
+                        <li class="text-sm text-base-content/70 flex items-start gap-2">
+                          <span class="text-amber-500 mt-0.5">-</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
-            </div>
-          </section>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          <!-- Stretching & Mobility -->
-          <section class="card bg-base-100 shadow-lg">
-            <div class="card-body">
-              <h2 class="card-title text-2xl mb-6">Stretching & Mobility</h2>
-              <div class="grid md:grid-cols-2 gap-6">
-                <div class="space-y-4">
-                  <h3 class="text-lg font-semibold">Static Stretches</h3>
-                  <div class="space-y-3">
-                    <div class="p-4 bg-base-200 rounded-lg">
-                      <h4 class="font-medium mb-2">Wall Push Stretch</h4>
-                      <p class="text-sm text-base-content/80">
-                        Hands against wall, step back affected leg. Keep heel down, lean forward.
-                        Hold 30-60 seconds, 3 times.
-                      </p>
+        <!-- Stretching & Mobility -->
+        <section class="mb-16">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+              <svg class="w-6 h-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-base-content">Stretching & Mobility</h2>
+              <p class="text-sm text-base-content/50">Flexibility and range of motion work</p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Static Stretches -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                Static Stretches
+              </h3>
+              <div class="space-y-3">
+                {stretches
+                  .filter(s => s.type === "static")
+                  .map((stretch) => (
+                    <div class="p-4 rounded-xl bg-base-100/60 border border-base-content/5 hover:border-base-content/10 transition-colors">
+                      <h4 class="font-medium text-base-content mb-2">{stretch.name}</h4>
+                      <p class="text-sm text-base-content/60">{stretch.description}</p>
                     </div>
-                    <div class="p-4 bg-base-200 rounded-lg">
-                      <h4 class="font-medium mb-2">Towel Stretch</h4>
-                      <p class="text-sm text-base-content/80">
-                        Sitting, loop towel around foot. Pull toes toward shin, hold 30 seconds.
-                        Repeat 3 times.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="space-y-4">
-                  <h3 class="text-lg font-semibold">Dynamic Mobility</h3>
-                  <div class="space-y-3">
-                    <div class="p-4 bg-base-200 rounded-lg">
-                      <h4 class="font-medium mb-2">Ankle Circles</h4>
-                      <p class="text-sm text-base-content/80">
-                        10 circles each direction. Focus on full range of motion.
-                        Good warm-up exercise.
-                      </p>
-                    </div>
-                    <div class="p-4 bg-base-200 rounded-lg">
-                      <h4 class="font-medium mb-2">Calf Pumps</h4>
-                      <p class="text-sm text-base-content/80">
-                        Point and flex foot 20 times. Promotes blood flow and reduces stiffness.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                }
               </div>
             </div>
-          </section>
-        </div>
 
-        <div class="mt-12 text-center">
+            <!-- Dynamic Mobility -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-semibold text-base-content/60 uppercase tracking-wider flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                Dynamic Mobility
+              </h3>
+              <div class="space-y-3">
+                {stretches
+                  .filter(s => s.type === "dynamic")
+                  .map((stretch) => (
+                    <div class="p-4 rounded-xl bg-base-100/60 border border-base-content/5 hover:border-base-content/10 transition-colors">
+                      <h4 class="font-medium text-base-content mb-2">{stretch.name}</h4>
+                      <p class="text-sm text-base-content/60">{stretch.description}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="mt-16 text-center">
           <a href="/fitness" class="btn btn-outline">
             ← Back to Fitness
           </a>
