@@ -16,6 +16,7 @@ export interface AerobicThresholdData {
   date: string;
   stravaURL: string;
   test: {
+    pace: string;
     inclinePercent: number;
     result: {
       totalTimeSeconds: number;
@@ -179,6 +180,10 @@ const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
         <div>
           <span style={{ opacity: 0.6 }}>Duration</span>
           <div style={{ fontWeight: 500 }}>{formatTime(test.result.totalTimeSeconds)}</div>
+        </div>
+        <div>
+          <span style={{ opacity: 0.6 }}>Pace</span>
+          <div style={{ fontWeight: 500 }}>{test.pace}</div>
         </div>
         <div>
           <span style={{ opacity: 0.6 }}>Working HR</span>

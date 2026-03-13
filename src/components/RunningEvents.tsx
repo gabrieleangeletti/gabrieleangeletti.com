@@ -45,15 +45,15 @@ const upcomingEvents: RunningEvent[] = [
     elevationGainM: 2800,
   },
   {
-    id: "utmb-val-daran-2026",
-    name: "Hoka Val d'Aran by UTMB",
-    dateISO: "2026-07-03",
+    id: "utmb-mallorca-2026",
+    name: "Mallorca by UTMB",
+    dateISO: "2026-10-31",
     type: "race",
     image: "/images/events/utmb-world-series.png",
-    url: "https://valdaran.utmb.world/races/CDH",
-    location: "Vielha, Spain",
-    distanceKm: 110,
-    elevationGainM: 6400,
+    url: "https://mallorca.utmb.world/races/100K",
+    location: "Mallorca, Spain",
+    distanceKm: 104,
+    elevationGainM: 3740,
   },
 ];
 
@@ -96,6 +96,7 @@ const RunningEvents = () => {
           formattedElevation: formatElevation(event.elevationGainM),
         } satisfies EnrichedEvent;
       })
+      .filter((event) => event.weeksUntil > 0)
       .sort((a, b) => a.dateISO.localeCompare(b.dateISO));
   }, []);
 
@@ -135,11 +136,35 @@ const RunningEvents = () => {
 
             <div className="mt-auto flex items-center gap-3 text-xs font-medium text-base-content/70">
               <span className="flex items-center gap-1">
-                <svg className="w-3 h-3 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                <svg
+                  className="w-3 h-3 text-base-content/40"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
                 {event.formattedDistance}
               </span>
               <span className="flex items-center gap-1">
-                <svg className="w-3 h-3 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" /></svg>
+                <svg
+                  className="w-3 h-3 text-base-content/40"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 11l7-7 7 7M5 19l7-7 7 7"
+                  />
+                </svg>
                 {event.formattedElevation}
               </span>
             </div>
