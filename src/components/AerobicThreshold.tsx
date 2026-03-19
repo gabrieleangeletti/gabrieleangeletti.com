@@ -64,6 +64,27 @@ const data: AerobicThresholdData[] = [
       workingHeartRate: 108.83,
     },
   },
+  {
+    date: "2026-03-19",
+    stravaURL: "",
+    test: {
+      pace: "7:53min/km",
+      inclinePercent: 7.0,
+      result: {
+        totalTimeSeconds: 3240,
+        firstHalfAvgHRbpm: 144.01,
+        secondHalfAvgHRbpm: 149.99,
+        rawDrift: 5.98,
+        simpleDriftPercentage: 4.15,
+      },
+    },
+    score: {
+      value: 632,
+      efficiencyFactor: 1.81,
+      validityMultiplier: 1.0,
+      workingHeartRate: 101.0,
+    },
+  },
 ];
 
 const AerobicThreshold = () => {
