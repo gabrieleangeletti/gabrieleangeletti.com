@@ -1,12 +1,11 @@
 import type { APIRoute } from "astro";
+import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-export const ALL: APIRoute = async ({ params, request, locals }) => {
-  const runtime = locals.runtime as { env: { VO2_API_BASE_URL: string; VO2_API_KEY: string } };
-
-  const apiBaseUrl = runtime.env.VO2_API_BASE_URL;
-  const apiKey = runtime.env.VO2_API_KEY;
+export const ALL: APIRoute = async ({ params, request }) => {
+  const apiBaseUrl = env.VO2_API_BASE_URL;
+  const apiKey = env.VO2_API_KEY;
 
   if (!apiBaseUrl || !apiKey) {
     return new Response(

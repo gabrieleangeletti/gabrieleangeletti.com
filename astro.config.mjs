@@ -11,6 +11,9 @@ export default defineConfig({
   integrations: [react(), mdx(), sitemap()],
   adapter: cloudflareAdapter({
     imageService: "compile",
+    platformProxy: {
+      enabled: true,
+    },
   }),
   vite: {
     plugins: [
@@ -18,6 +21,9 @@ export default defineConfig({
         config: "./tailwind.config.js",
       }),
     ],
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
   },
-  output: "static",
+  output: "server",
 });
