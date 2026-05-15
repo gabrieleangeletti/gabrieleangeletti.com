@@ -60,19 +60,30 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 )}
 
 <script>
+  declare global {
+    interface Window {
+      turnstile: {
+        render: (container: string | HTMLElement, options: any) => string;
+        reset: (widgetId: string) => void;
+        getResponse: (widgetId: string) => string;
+      };
+    }
+  }
+
   const SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
   function initModal() {
-    const modal = document.getElementById("fitness-modal");
+    const modal = document.getElementById("fitness-modal") as HTMLDialogElement;
     const openBtns = document.querySelectorAll(".open-signup-modal");
     const closeBtn = document.getElementById("close-modal");
     const closeBackdrop = document.getElementById("close-backdrop");
-    const form = document.getElementById("signup-form");
-    const emailInput = document.getElementById("email-input");
+    const form = document.getElementById("signup-form") as HTMLFormElement;
+
+    const emailInput = document.getElementById("email-input") as HTMLInputElement;
     const formMessage = document.getElementById("form-message");
-    const submitBtn = document.getElementById("submit-btn");
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
     const turnstileContainer = document.getElementById("turnstile-widget");
-    const turnstileTokenInput = document.getElementById("turnstile-token");
+    const turnstileTokenInput = document.getElementById("turnstile-token") as HTMLInputElement;
 
     if (!modal) return;
 
