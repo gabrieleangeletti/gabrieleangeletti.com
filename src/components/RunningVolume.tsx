@@ -22,6 +22,13 @@ interface RunningVolumeData {
         distanceMeters: number;
         elevationGainMeters: number;
       };
+      hrZoneDistribution: {
+        "1": number;
+        "2": number;
+        "3": number;
+        "4": number;
+        "5": number;
+      } | null;
     }[];
   };
   frequency: string;
@@ -89,6 +96,18 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           existing.totalElevationGainMeters += entry.totalElevationGainMeters;
           existing.activityCount += entry.activityCount;
 
+          if (entry.hrZoneDistribution) {
+            if (!existing.hrZoneDistribution) {
+              existing.hrZoneDistribution = { ...entry.hrZoneDistribution };
+            } else {
+              existing.hrZoneDistribution["1"] += entry.hrZoneDistribution["1"];
+              existing.hrZoneDistribution["2"] += entry.hrZoneDistribution["2"];
+              existing.hrZoneDistribution["3"] += entry.hrZoneDistribution["3"];
+              existing.hrZoneDistribution["4"] += entry.hrZoneDistribution["4"];
+              existing.hrZoneDistribution["5"] += entry.hrZoneDistribution["5"];
+            }
+          }
+
           if (entry.longest.elapsedTimeSeconds > existing.longest.elapsedTimeSeconds) {
             existing.longest = { ...entry.longest };
           }
@@ -96,6 +115,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
           mergedByPeriod.set(entry.period, {
             ...entry,
             longest: { ...entry.longest },
+            hrZoneDistribution: entry.hrZoneDistribution ? { ...entry.hrZoneDistribution } : null,
           });
         }
       }
@@ -160,6 +180,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
             elapsedTimeSeconds: entry.longest.elapsedTimeSeconds,
             movingTimeSeconds: entry.longest.movingTimeSeconds,
           },
+          hrZoneDistribution: entry.hrZoneDistribution,
         };
       })
       .sort((a, b) => a.weekStartISO.localeCompare(b.weekStartISO));
@@ -216,7 +237,7 @@ const RunningVolume = ({ showHeading = true }: RunningVolumeProps) => {
         <select
           value={monthsBack}
           onChange={(e) => setMonthsBack(Number(e.target.value))}
-          className="select select-bordered select-sm w-auto min-w-[140px]"
+          className="select select-bordered select-sm w-auto min-w-35"
           aria-label="Select date range"
         >
           <option value={1}>Last month</option>

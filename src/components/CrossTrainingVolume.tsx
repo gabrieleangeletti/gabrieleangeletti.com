@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import useChartTheme from "../hooks/useChartTheme";
-import { formatHoursMinutes, formatWeek } from "../utils/format";
+import { formatDuration, formatWeek } from "../utils/format";
 
 const crossTrainingSports = ["elliptical", "cycling", "hiking"] as const;
 
@@ -277,7 +277,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
     if (selectedSport === "elliptical") {
       const point = latestWeek as EllipticalPoint;
       return [
-        { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
+        { label: "Weekly time", value: formatDuration(point.movingHours * 3600) },
         { label: "Sessions", value: `${point.activityCount}` },
       ];
     }
@@ -285,7 +285,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
     if (selectedSport === "cycling") {
       const point = latestWeek as CyclingPoint;
       return [
-        { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
+        { label: "Weekly time", value: formatDuration(point.movingHours * 3600) },
         { label: "Distance", value: `${point.distanceKm.toFixed(1)} km` },
         { label: "Elevation", value: `${point.elevationM.toLocaleString()} m` },
       ];
@@ -294,7 +294,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
     if (selectedSport === "hiking") {
       const point = latestWeek as HikingPoint;
       return [
-        { label: "Weekly time", value: formatHoursMinutes(point.movingHours) },
+        { label: "Weekly time", value: formatDuration(point.movingHours * 3600) },
         { label: "Distance", value: `${point.distanceKm.toFixed(1)} km` },
         { label: "Elevation", value: `${point.elevationM.toLocaleString()} m` },
       ];
@@ -342,12 +342,21 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                 labelStyle={{ color: "black" }}
                 formatter={(value: number | string, name) => {
                   const numericValue = typeof value === "number" ? value : Number(value);
-                  if (name === "ellipticalHours" || name === "cyclingHours" || name === "hikingHours") {
-                    const sport = name === "ellipticalHours" ? "elliptical" : name === "cyclingHours" ? "cycling" : "hiking";
-                    return [formatHoursMinutes(numericValue), sportLabels[sport]];
+                  if (
+                    name === "ellipticalHours" ||
+                    name === "cyclingHours" ||
+                    name === "hikingHours"
+                  ) {
+                    const sport =
+                      name === "ellipticalHours"
+                        ? "elliptical"
+                        : name === "cyclingHours"
+                          ? "cycling"
+                          : "hiking";
+                    return [formatDuration(numericValue * 3600), sportLabels[sport]];
                   }
                   if (name === "totalHours") {
-                    return [formatHoursMinutes(numericValue), "Total"];
+                    return [formatDuration(numericValue * 3600), "Total"];
                   }
                   return [value, name];
                 }}
@@ -425,10 +434,11 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                   key={sport}
                   type="button"
                   onClick={() => setSelectedSport(sport)}
-                  className={`flex items-center rounded-full px-3 py-1 text-sm font-medium transition ${isActive
-                    ? "bg-primary text-primary-content shadow"
-                    : "text-base-content/70 hover:text-base-content"
-                    }`}
+                  className={`flex items-center rounded-full px-3 py-1 text-sm font-medium transition ${
+                    isActive
+                      ? "bg-primary text-primary-content shadow"
+                      : "text-base-content/70 hover:text-base-content"
+                  }`}
                 >
                   {sportLabels[sport]}
                 </button>
@@ -486,7 +496,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                     labelStyle={{ color: "black" }}
                     formatter={(value: number | string) => {
                       const numericValue = typeof value === "number" ? value : Number(value);
-                      return [formatHoursMinutes(numericValue), "Time"];
+                      return [formatDuration(numericValue * 3600), "Time"];
                     }}
                     labelFormatter={(label) => `Week of ${label}`}
                   />
@@ -547,7 +557,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                     formatter={(value: number | string, name) => {
                       const numericValue = typeof value === "number" ? value : Number(value);
                       if (name === "movingHours") {
-                        return [formatHoursMinutes(numericValue), "Time"];
+                        return [formatDuration(numericValue * 3600), "Time"];
                       }
                       if (name === "distanceKm") {
                         return [`${numericValue.toFixed(1)} km`, "Distance"];
@@ -644,7 +654,7 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
                     formatter={(value: number | string, name) => {
                       const numericValue = typeof value === "number" ? value : Number(value);
                       if (name === "movingHours") {
-                        return [formatHoursMinutes(numericValue), "Time"];
+                        return [formatDuration(numericValue * 3600), "Time"];
                       }
                       if (name === "distanceKm") {
                         return [`${numericValue.toFixed(1)} km`, "Distance"];
@@ -707,8 +717,8 @@ const CrossTrainingVolume = ({ volumeBySport, referenceWeeks = [] }: CrossTraini
             </div>
           )}
         </div>
-      </section >
-    </div >
+      </section>
+    </div>
   );
 };
 

@@ -39,18 +39,30 @@ export const formatWeek = (period: string): [string, string] => {
   }
 };
 
-export const formatHoursMinutes = (hours: number) => {
-  const totalMinutes = Math.round(hours * 60);
-  const wholeHours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+/**
+ * Formats seconds into a human-readable string.
+ * @param seconds Total time in seconds
+ * @param includeSeconds If true, shows "1m 5s". If false, rounds to nearest minute.
+ */
+export const formatDuration = (seconds: number, includeSeconds = false) => {
+  if (seconds === 0) return "0m";
 
-  if (wholeHours === 0) {
-    return `${minutes} min`;
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+
+  const hLabel = h > 0 ? `${h}h ` : "";
+
+  if (!includeSeconds) {
+    const roundedM = s >= 30 ? m + 1 : m;
+    // Handle the case where rounding 59s to 60m should add an hour
+    if (roundedM === 60) return `${h + 1}h`;
+    if (h === 0) return `${roundedM}m`;
+    return roundedM > 0 ? `${h}h ${roundedM}m` : `${h}h`;
   }
 
-  if (minutes === 0) {
-    return `${wholeHours} h`;
-  }
+  const mLabel = m > 0 || h > 0 ? `${m}m ` : "";
+  const sLabel = s > 0 || (h === 0 && m === 0) ? `${s}s` : "";
 
-  return `${wholeHours} h ${minutes} min`;
+  return `${hLabel}${mLabel}${sLabel}`.trim();
 };
