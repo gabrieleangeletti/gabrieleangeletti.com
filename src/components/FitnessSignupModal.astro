@@ -87,7 +87,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
     if (!modal) return;
 
-    let widgetId = null;
+    let widgetId: string | null = null;
 
     const loadTurnstile = () => {
       if (!SITE_KEY) return;
@@ -99,7 +99,7 @@ const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       } else {
         widgetId = window.turnstile.render("#turnstile-widget", {
           sitekey: SITE_KEY,
-          callback: (token) => {
+          callback: (token: string) => {
             if (turnstileTokenInput) {
               turnstileTokenInput.value = token;
             }
